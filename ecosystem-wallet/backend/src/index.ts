@@ -31,7 +31,7 @@ app.post("/api/protected-create-encryption-session", async (req, res) => {
                 error: 'You must be signed in to view the protected content on this page.',
             });
         }
-        await openfort.iam.verifyAuthToken(accessToken);
+        await openfort.iam.verifyOAuthToken({ provider: 'firebase', token: accessToken, tokenType: 'idToken' });
         const session = await openfort.registerRecoverySession(process.env.SHIELD_PUBLIC_KEY!, process.env.SHIELD_SECRET_KEY!, process.env.ENCRYPTION_SHARE!)
         res.json({ session });
     } catch (error) {

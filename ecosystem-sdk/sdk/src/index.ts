@@ -1,13 +1,12 @@
-import { Client } from "@openfort/ecosystem-js/client";
+import { Client, ThirdPartyAuthProvider, UserProfile } from "@openfort/ecosystem-js/client";
 
 class EcosystemWallet extends Client {
-    constructor({ clientId, redirectUri, logoutRedirectUri }: { clientId: string, redirectUri: string, logoutRedirectUri: string }) {
+    constructor({ clientId }: { clientId: string }) {
         super({
-            redirectUri: redirectUri,
-            logoutRedirectUri: logoutRedirectUri,
             baseConfig: {
                 ecosystemWalletDomain: 'https://id.sample.openfort.xyz',
                 publishableKey: clientId,
+                thirdPartyAuth: true,
                 ecosystemId: 'test-226353cd-dd0e-4fba-8208-58dfe29d3581',
             },
             appearance: {
@@ -28,6 +27,11 @@ class EcosystemWallet extends Client {
                 return undefined;
             }
         });
+    }
+
+
+    async authenticate(token: string): Promise<UserProfile | { redirect_url: string }> {
+        return await super.authenticateWithThirdPartyProvider({ token: token, provider: ThirdPartyAuthProvider.FIREBASE });
     }
 
     // Add new methods here
