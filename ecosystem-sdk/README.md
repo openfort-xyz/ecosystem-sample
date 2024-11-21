@@ -42,6 +42,11 @@ reverseDomainNameSystem:
 ```.env
 NEXT_PUBLIC_POLICY_ID=
 NEXT_PUBLIC_CLIENT_ID=
+
+NEXT_PUBLIC_apiKey=
+NEXT_PUBLIC_authDomain=
+NEXT_PUBLIC_projectId=
+NEXT_PUBLIC_appId=
 ```
 
 ### Installation
@@ -76,6 +81,7 @@ yarn link
 
 ```bash
 cd sdk-sample
+# Make sure to use the name of the package in the package.json file of the SDK directory.
 yarn link @ecosystem/sdk
 yarn dev
 ```
