@@ -77,7 +77,6 @@ export function Actions() {
     setLoadingState(true);
     try {
       disconnect();
-      await ecosystemWalletInstance.logout();
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {

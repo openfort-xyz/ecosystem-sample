@@ -36,10 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(user);
       setIdToken(token);
       console.log(`[token changed] updating token with openfort`);
-      const response = await ecosystemWalletInstance.authenticate(token);
-      if('redirect_url' in response) {
-        window.location.href = response.redirect_url;
-      }
+      ecosystemWalletInstance.authenticate(token);
     });
   }, []);
 
@@ -49,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         const token = await user.getIdToken(true);
         setIdToken(token);
         console.log(`[refreshed token] updating token with openfort`);
-        await ecosystemWalletInstance.authenticate(token);
+        ecosystemWalletInstance.authenticate(token);
       }
     }, 10 * 60 * 1000);
     return () => clearInterval(handle);
