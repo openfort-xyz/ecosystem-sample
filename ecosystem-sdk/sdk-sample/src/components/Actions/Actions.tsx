@@ -1,26 +1,49 @@
 import {
   BaseError,
-  useAccount, useDisconnect, useEnsName,
+  useAccount, 
+  useDisconnect,
   useSignMessage,
   useSignTypedData,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from 'wagmi';
-import { abi } from '@/src/utils/abi';
 import { polygonAmoy } from 'wagmi/chains';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
-import { encodeFunctionData } from 'viem';
-import { ecosystemWalletInstance } from '@/src/utils/ecosystemWallet';
-import { useState } from 'react';
+import {  createWalletClient, custom, parseAbi } from 'viem';
+import { useShowCallsStatus, useWriteContracts } from 'wagmi/experimental';
+import { erc7715Actions } from 'viem/experimental';
+import { abi } from '@/src/utils/abi';
+import { useCallback, useState } from 'react';
+import { useAuthentication } from '@/src/hooks/useAuthentication';
+
 
 export function Actions() {
   const { connector } = useAccount();
+  const { logout } = useAuthentication();
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const { data:bundleIdentifier, isPending: callsPending, error: callsError, writeContracts } = useWriteContracts()
+  const { showCallsStatus, isPending: bundlePending, error: bundleError} = useShowCallsStatus()
   const { signTypedData, data: typedSignature, isPending: isSigning, error: errorTypedSignature } = useSignTypedData();
   const { signMessage, data: personalSignature, isPending: personalIsSigning, error: errorPersonalSignature } = useSignMessage();
   const { disconnect } = useDisconnect();
-  const [loading, setLoadingState] = useState<boolean>(false);
+
+  const handleDisconnectWallet = useCallback(async() => {
+    disconnect();
+    const provider = await connector?.getProvider();
+    if(connector?.name === 'DOS ID') {
+      // even though we are logged out here, the wallet still has the session.
+      await logout();
+    }
+    // @ts-ignore
+    provider?.disconnect(); // this is needed because wagmi isn't calling the providers disconnect method
+    location.reload();
+  }, [disconnect]);
+
+  const handleShowCallsStatus = (inputValue: string) => {
+    showCallsStatus({ id: inputValue });
+  };
+
   const handleExampleTx = () => {
     writeContract({
       abi,
@@ -54,34 +77,59 @@ export function Actions() {
 
   const handleGrantPermissions = async () => {
     const provider = await connector?.getProvider()
-    const privateKey = generatePrivateKey();
-    const account = privateKeyToAccount(privateKey);
-    const sessionKeyAddress = await (provider as any).request({ method: 'wallet_grantPermissions', address: account.address, expiry: 60 * 60 * 1000 });
-    console.log(`sessionKeyAddress: ${sessionKeyAddress}`);
-  };
 
-  const handleSendCalls = async () => {
-    const provider = await connector?.getProvider();
-    
-    const address = await (provider as any).request({
-      method: 'wallet_sendCalls',
-      calls: [
-        { to: "0x6B175474E89094C44Da98b954EedeAC495271d0F", data: encodeFunctionData({ abi, functionName: 'mint', args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B'] }) },
-        { to: "0x6B175474E89094C44Da98b954EedeAC495271d0F", data: encodeFunctionData({ abi, functionName: 'mint', args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B'] }) }
-      ]
+    const sessionKey = generatePrivateKey();
+    const accountSession = privateKeyToAccount(sessionKey).address;
+
+    const walletClient = createWalletClient({
+      chain: polygonAmoy, 
+      // @ts-ignore
+      transport: custom(provider),
+    }).extend(erc7715Actions()) 
+    await walletClient.grantPermissions({
+      signer:{
+        type: "account",
+        data:{
+          id: accountSession
+        }
+      },
+      expiry: 60 * 60 * 24,
+      permissions: [
+        {
+          type: 'contract-call',
+          data: {
+            address: '0x2522f4fc9af2e1954a3d13f7a5b2683a00a4543a',
+            calls: []
+          },
+          policies: []
+        }
+      ],
     });
-    console.log(`address: ${address}`);
+
+    console.log(`sessionKeyAddress: ${accountSession}`);
   };
 
-  const ecosystemWalletLogout = async () => {
-    setLoadingState(true);
-    try {
-      disconnect();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      setLoadingState(false);
-    }
+  const handleSendCalls = () => {
+    writeContracts({
+      contracts: [
+        {
+          address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+          abi: parseAbi(['function mint(address) returns (bool)']),
+          functionName: 'mint',
+          args: [
+            '0xd2135CfB216b74109775236E36d4b433F1DF507B'
+          ],
+        },
+        {
+          address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+          abi: parseAbi(['function mint(address) returns (bool)']),
+          functionName: 'mint',
+          args: [
+            '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+          ],
+        },
+      ],
+    })
   };
 
   return (
@@ -118,14 +166,30 @@ export function Actions() {
             handleAction={handleGrantPermissions}
             buttonText="Example Session"
           />
-          <ActionSection
+          <TransactionSection
             title="wallet_sendCalls"
+            hash={bundleIdentifier ? `0x${bundleIdentifier}` : undefined}
+            isConfirmed={false}
+            error={callsError}
+            isPending={callsPending}
+            isConfirming={false}
             handleAction={handleSendCalls}
             buttonText="Example Batched"
           />
+          <InputTransactionSection
+            title="wallet_showCallsStatus"
+            isConfirming={isConfirming}
+            isConfirmed={isConfirmed}
+            error={bundleError}
+            isPending={bundlePending}
+            handleAction={handleShowCallsStatus}
+            buttonText="Show Calls"
+            inputLabel="Enter Address"
+            placeholder="tin_..."
+          />
           <ActionSection
             title="disconnect"
-            handleAction={ecosystemWalletLogout}
+            handleAction={handleDisconnectWallet}
             buttonText="Disconnect"
           />
         </div>
@@ -233,3 +297,69 @@ const types = {
     {name: 'wallet', type: 'address'},
   ],
 };
+
+interface InputTransactionSectionProps {
+  title: string;
+  isConfirming: boolean;
+  isConfirmed: boolean;
+  error: Error | null;
+  isPending: boolean;
+  handleAction: (inputValue: string) => void;
+  buttonText: string;
+  inputLabel: string;
+  placeholder: string;
+}
+
+function InputTransactionSection({ 
+  title, 
+  isConfirming, 
+  isConfirmed, 
+  error, 
+  isPending, 
+  handleAction, 
+  buttonText,
+  inputLabel,
+  placeholder 
+}: InputTransactionSectionProps) {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      handleAction(inputValue.trim());
+    }
+  };
+
+  return (
+    <div className="bg-white shadow rounded-lg p-4">
+      <h2 className="text-lg font-semibold mb-2">{title}</h2>
+      {isConfirming && <p className="text-sm text-blue-600 mb-2">Waiting for confirmation...</p>}
+      {isConfirmed && <p className="text-sm text-green-600 mb-2">Transaction confirmed.</p>}
+      {error && <p className="text-sm text-red-600 mb-2">Error: {(error as BaseError).shortMessage || error.message}</p>}
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="input-field" className="block text-sm font-medium text-gray-700 mb-1">
+            {inputLabel}
+          </label>
+          <input
+            id="input-field"
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder={placeholder}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            disabled={isPending}
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed w-full"
+          disabled={isPending || !inputValue.trim()}
+        >
+          {isPending ? 'Confirming...' : buttonText}
+        </button>
+      </form>
+    </div>
+  );
+}

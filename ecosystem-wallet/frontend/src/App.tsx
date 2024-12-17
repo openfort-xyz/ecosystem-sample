@@ -10,7 +10,6 @@ import {
   UnsupportedMethod
 } from '@openfort/ecosystem-js/react';
 import { Route, Routes } from 'react-router-dom';
-import { polygonAmoy } from 'viem/chains';
 import Loading from './Loading';
 
 
@@ -51,7 +50,9 @@ function App() {
   return (
     <FortProvider 
       appName={process.env.REACT_APP_APP_NAME}
-      defaultChain={polygonAmoy}
+      supportedChains={[80002]}
+      thirdPartyAuthentication={true}
+      logoUrl='https://blog-cms.openfort.xyz/uploads/dos_icon_logo_eb409648a4.svg'
       publishableKey={process.env.REACT_APP_OPENFORT_PUBLIC_KEY!}
       ecosystemId={process.env.REACT_APP_OPENFORT_ECOSYSTEM_ID!}
       shieldConfig={{

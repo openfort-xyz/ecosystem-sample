@@ -43,6 +43,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     const handle = setInterval(async () => {
       if (user) {
+        // firebase tokens are bearer tokens, i.e. they are only invalid after they expire.
+        // here we issue a new token every 10 minutes to keep the token valid.
         const token = await user.getIdToken(true);
         setIdToken(token);
         console.log(`[refreshed token] updating token with openfort`);

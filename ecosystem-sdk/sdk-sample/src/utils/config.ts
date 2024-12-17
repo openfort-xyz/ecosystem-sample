@@ -5,6 +5,7 @@ import { injected } from 'wagmi/connectors';
 // create the Wagmi config for Immutable zkEVM Testnet
 export const config = createConfig({
   chains: [polygonAmoy],
+  ssr: true,
   connectors: [injected()],
   transports: {
     [polygonAmoy.id]: http(),
