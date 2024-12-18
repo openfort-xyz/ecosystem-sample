@@ -33,9 +33,8 @@ class EcosystemWallet extends Client {
         return await super.authenticateWithThirdPartyProvider({ token: token, provider: ThirdPartyAuthProvider.FIREBASE });
     }
 
-    // Add new methods here
-    newMethod() {
-        console.log('This is a new method in the new SDK');
+    setPolicy(options?: { policy?: string; }): void {
+        return super.setPolicy(options);
     }
 }
 
