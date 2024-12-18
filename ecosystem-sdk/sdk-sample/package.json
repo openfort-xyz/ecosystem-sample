@@ -9,7 +9,6 @@
     "lint": "eslint app --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@rapidfire/id": "^0.0.30",
     "@tanstack/react-query": "^5.60.6",
     "axios": "^1.6.8",
     "firebase": "^9.12.1",

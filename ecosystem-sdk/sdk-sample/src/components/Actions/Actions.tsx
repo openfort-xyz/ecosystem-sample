@@ -35,8 +35,7 @@ export function Actions() {
       // even though we are logged out here, the wallet still has the session.
       await logout();
     }
-    // @ts-ignore
-    provider?.disconnect(); // this is needed because wagmi isn't calling the providers disconnect method
+    (provider as any)?.disconnect(); // this is needed because wagmi isn't calling the providers disconnect method
     location.reload();
   }, [disconnect]);
 
@@ -83,8 +82,7 @@ export function Actions() {
 
     const walletClient = createWalletClient({
       chain: polygonAmoy, 
-      // @ts-ignore
-      transport: custom(provider),
+      transport: custom(provider as any),
     }).extend(erc7715Actions()) 
     await walletClient.grantPermissions({
       signer:{

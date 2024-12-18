@@ -2,6 +2,8 @@
 
 ## How to run locally
 
+** To run this sample, you need to install/link your own ecosystem wallet. **
+
 **1. Clone and configure the sample**
 
 Copy the .env.local.example file into a file named .env.local in the folder of the server you want to use. For example:

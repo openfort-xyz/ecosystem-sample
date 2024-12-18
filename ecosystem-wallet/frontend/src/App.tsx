@@ -7,7 +7,8 @@ import {
   FortProvider, 
   PersonalSign, 
   Settings,
-  UnsupportedMethod
+  UnsupportedMethod,
+  WalletShowCalls
 } from '@openfort/ecosystem-js/react';
 import { Route, Routes } from 'react-router-dom';
 import Loading from './Loading';
@@ -66,6 +67,7 @@ function App() {
         <Route path='/sign/eth-send-transaction' element={<EthSendTransaction />} />
         <Route path='/sign/wallet-grant-permissions' element={<WalletGrantPermissions />} />
         <Route path='/sign/wallet-send-calls' element={<WalletSendCalls />} />
+        <Route path='/sign/wallet-show-calls' element={<WalletShowCalls />} />
         <Route path='/sign/eth-request-accounts' element={<EthRequestAccounts />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/sign/loading' element={<Loading />} />
