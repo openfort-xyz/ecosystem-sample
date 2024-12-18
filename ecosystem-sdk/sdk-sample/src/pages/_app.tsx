@@ -11,9 +11,7 @@ import { useEffect } from "react";
 const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    ecosystemWalletInstance.getEthereumProvider({
-      policy: process.env.NEXT_PUBLIC_POLICY_ID,
-    });
+    ecosystemWalletInstance.getEthereumProvider();
   }, []);
 
   return (

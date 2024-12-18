@@ -1,9 +1,11 @@
 import {
   BaseError,
   useAccount, 
+  useChainId, 
   useDisconnect,
   useSignMessage,
   useSignTypedData,
+  useSwitchChain,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from 'wagmi';
@@ -15,7 +17,7 @@ import { erc7715Actions } from 'viem/experimental';
 import { abi } from '@/src/utils/abi';
 import { useCallback, useState } from 'react';
 import { useAuthentication } from '@/src/hooks/useAuthentication';
-
+import { ecosystemWalletInstance } from '@/src/utils/ecosystemWallet';
 
 export function Actions() {
   const { connector } = useAccount();
@@ -27,6 +29,8 @@ export function Actions() {
   const { signTypedData, data: typedSignature, isPending: isSigning, error: errorTypedSignature } = useSignTypedData();
   const { signMessage, data: personalSignature, isPending: personalIsSigning, error: errorPersonalSignature } = useSignMessage();
   const { disconnect } = useDisconnect();
+  const chainId = useChainId()
+  const { chains, switchChain, error: errorChain } = useSwitchChain()
 
   const handleDisconnectWallet = useCallback(async() => {
     disconnect();
@@ -44,6 +48,12 @@ export function Actions() {
   };
 
   const handleExampleTx = () => {
+    const policy = chainId === polygonAmoy.id ?  process.env.NEXT_PUBLIC_AMOY_POLICY_ID : process.env.NEXT_PUBLIC_SEPOLIA_POLICY_ID
+    ecosystemWalletInstance.setPolicy(
+      {
+        policy: policy
+      }
+    );
     writeContract({
       abi,
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
@@ -182,9 +192,24 @@ export function Actions() {
             isPending={bundlePending}
             handleAction={handleShowCallsStatus}
             buttonText="Show Calls"
-            inputLabel="Enter Address"
+            inputLabel="Enter transaction id"
             placeholder="tin_..."
           />
+          <div>
+            <h2>Switch Chain</h2>
+            {chains.map((chain) => (
+              <button
+                disabled={chainId === chain.id}
+                key={chain.id}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed w-full"
+                onClick={() => switchChain({ chainId: chain.id })}
+                type="button"
+              >
+                {chain.name}
+              </button>
+            ))}
+            {errorChain?.message}
+          </div>
           <ActionSection
             title="disconnect"
             handleAction={handleDisconnectWallet}

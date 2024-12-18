@@ -1,7 +1,7 @@
-import EcosystemWallet from '@YOUR/ECOSYSTEM-WALLET';
+import EcosystemWallet from '@openfort/ecosystem-client-sdk-sample-app';
 
 export const ecosystemWalletInstance = new EcosystemWallet({
     appChainIds: [80002],
-    appLogoUrl: 'https://example.com/logo.png',
+    appLogoUrl: 'https://a.rgbimg.com/users/b/ba/barunpatro/600/mf6B5Gq.jpg',
     appName: 'Example App',
 });
