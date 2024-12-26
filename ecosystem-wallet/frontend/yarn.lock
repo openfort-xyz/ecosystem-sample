@@ -1836,10 +1836,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openfort/ecosystem-js@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.0.13.tgz#7f6302b26db29c73df29f7f102506f2eca4962a6"
-  integrity sha512-jTezX1gTPybsycdVEpX9RNZtm36bLUYFtq8WQoMcx//d6W6DFCpEGFS1O+VPQJhQdb7ZqBw03GN8x01xyv65Wg==
+"@openfort/ecosystem-js@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.0.14.tgz#921c974f78c4a6e1cfecafc18415f9a842d736c8"
+  integrity sha512-I0DvsJ9r+oRjgN3Wisiov3S3ZcFmV3thfRAkOJw8j9dLAR9Sn0NlsHn5+NLWgQcbA/YcdRFKIJlRLqJ7CDCWIw==
   dependencies:
     "@openfort/openfort-js" "0.8.13"
     "@stdlib/number-float64-base-normalize" "0.0.8"
@@ -1848,6 +1848,7 @@
     dayjs "^1.11.11"
     es-cookie "~1.3.2"
     eventemitter3 "^5.0.1"
+    fflate "^0.8.2"
     jwt-decode "^3.1.2"
     lucide-react "^0.414.0"
     mipd "^0.0.7"
@@ -5810,6 +5811,11 @@ fb-watchman@^2.0.0:
   integrity sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==
   dependencies:
     bser "2.1.1"
+
+fflate@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.8.2.tgz#fc8631f5347812ad6028bbe4a2308b2792aa1dea"
+  integrity sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==
 
 file-entry-cache@^6.0.1:
   version "6.0.1"
