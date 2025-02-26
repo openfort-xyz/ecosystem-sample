@@ -22,6 +22,7 @@ import { ecosystemWalletInstance } from '@/src/utils/ecosystemWallet';
 export function Actions() {
   const { connector } = useAccount();
   const { logout } = useAuthentication();
+  const [grantPermissionsError, setGrantPermissionsError] = useState<Error | null>(null);
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
   const { data:bundleIdentifier, isPending: callsPending, error: callsError, writeContracts } = useWriteContracts()
@@ -35,7 +36,7 @@ export function Actions() {
   const handleDisconnectWallet = useCallback(async() => {
     disconnect();
     const provider = await connector?.getProvider();
-    if(connector?.name === 'DOS ID') {
+    if(connector?.id === 'com.rapidfire.id') {
       // even though we are logged out here, the wallet still has the session.
       await logout();
     }
@@ -94,26 +95,29 @@ export function Actions() {
       chain: polygonAmoy, 
       transport: custom(provider as any),
     }).extend(erc7715Actions()) 
-    await walletClient.grantPermissions({
-      signer:{
-        type: "account",
-        data:{
-          id: accountSession
-        }
-      },
-      expiry: 60 * 60 * 24,
-      permissions: [
-        {
-          type: 'contract-call',
-          data: {
-            address: '0x2522f4fc9af2e1954a3d13f7a5b2683a00a4543a',
-            calls: []
-          },
-          policies: []
-        }
-      ],
-    });
-
+    try {
+      await walletClient.grantPermissions({
+        signer:{
+          type: "account",
+          data:{
+            id: accountSession
+          }
+        },
+        expiry: 60 * 60 * 24,
+        permissions: [
+          {
+            type: 'contract-call',
+            data: {
+              address: '0x2522f4fc9af2e1954a3d13f7a5b2683a00a4543a',
+              calls: []
+            },
+            policies: []
+          }
+        ],
+      });
+    } catch (error) {
+      setGrantPermissionsError(error as Error)
+    }
     console.log(`sessionKeyAddress: ${accountSession}`);
   };
 
@@ -173,6 +177,7 @@ export function Actions() {
             title="wallet_grantPermissions"
             handleAction={handleGrantPermissions}
             buttonText="Example Session"
+            error={grantPermissionsError}
           />
           <TransactionSection
             title="wallet_sendCalls"
@@ -214,6 +219,7 @@ export function Actions() {
             title="disconnect"
             handleAction={handleDisconnectWallet}
             buttonText="Disconnect"
+            error={null}
           />
         </div>
     </div>
@@ -293,12 +299,14 @@ interface ActionSectionProps {
   title: string;
   handleAction: () => void;
   buttonText: string;
+  error: Error | null;
 }
 
-function ActionSection({ title, handleAction, buttonText }: ActionSectionProps) {
+function ActionSection({ title, handleAction, buttonText, error }: ActionSectionProps) {
   return (
     <div className="bg-white shadow rounded-lg p-4">
       <h2 className="text-lg font-semibold mb-2">{title}</h2>
+      {error && <p className="text-sm text-red-600 mb-2">Error: {(error as BaseError).shortMessage || error.message}</p>}
       <button
         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
         onClick={handleAction}

@@ -12,7 +12,7 @@ export function ConnectorsList() {
   React.useEffect(() => {
     if (
       error &&
-      activeConnector?.name === 'DOS ID' &&
+      activeConnector?.id === 'com.rapidfire.id' &&
       error.message ===
         'User not authenticated and third party authentication required.'
     ) {
