@@ -48,11 +48,7 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
           client={Query.client}
         >
           <OpenfortProvider
-<<<<<<< HEAD
             thirdPartyAuthentication={true}
-=======
-            thirdPartyAuthentication={false}
->>>>>>> c4c8c08bc6f3db4703b87121dd917cd07f772ba1
             debugMode={true}
             ecosystemId={process.env.REACT_APP_OPENFORT_ECOSYSTEM_ID!}
             onRedirectCallback={(appState) => {

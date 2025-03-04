@@ -1,4 +1,4 @@
-import EcosystemWallet from '@openfort/ecosystem-client-sdk-sample-app';
+import EcosystemWallet from '@rapidfire/id';
 
 export const ecosystemWalletInstance = new EcosystemWallet({
     appChainIds: [80002],

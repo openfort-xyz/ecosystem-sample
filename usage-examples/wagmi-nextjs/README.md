@@ -1,4 +1,4 @@
-# Third party auth with Firebase and Ecosystem SDK
+# Third party auth with Firebase and Rapidfire ID
 
 ## How to run locally
 

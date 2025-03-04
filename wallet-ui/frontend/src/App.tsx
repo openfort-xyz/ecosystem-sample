@@ -9,8 +9,6 @@ import {
   withAuthenticationRequired,
   Settings,
   UnsupportedMethod,
-  LoginMethods,
-  Recover
 } from '@openfort/ecosystem-js/react';
 import { Route, Routes } from 'react-router-dom';
 import Loading from './Loading';
@@ -36,8 +34,6 @@ function App() {
       <Route path='/settings' element={<ProtectedRoute component={Settings} />} />
       <Route path='/' element={<ProtectedRoute component={Loading} />} />
       
-      <Route path='/authenticate' element={<LoginMethods />} />
-      <Route path='/recover' element={<Recover />} />
       <Route path='*' element={<UnsupportedMethod />} />
     </Routes>
   );
