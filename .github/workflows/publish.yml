@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ecosystem-sdk/sdk
+        working-directory: wallet-sdk
 
     steps:
       - name: Checkout
@@ -19,9 +19,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version-file: ecosystem-sdk/sdk/.nvmrc
+          node-version-file: wallet-sdk/.nvmrc
           cache: 'yarn'
-          cache-dependency-path: ecosystem-sdk/sdk/yarn.lock
+          cache-dependency-path: wallet-sdk/yarn.lock
 
       - name: Install dependencies
         run: yarn install --immutable

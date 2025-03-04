@@ -40,8 +40,8 @@ jobs:
         with:
           push: true
           tags: europe-west1-docker.pkg.dev/openfort/dockers/sample-ecosystem-backend:${{ github.event.release.tag_name }}
-          file: ./ecosystem-wallet/backend/Dockerfile
-          context: ./ecosystem-wallet/backend
+          file: ./wallet-ui/backend/Dockerfile
+          context: ./wallet-ui/backend
           build-args: |
             "SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}"
 
@@ -50,21 +50,25 @@ jobs:
         with:
           push: true
           tags: europe-west1-docker.pkg.dev/openfort/dockers/sample-ecosystem-frontend:${{ github.event.release.tag_name }}
-          file: ./ecosystem-wallet/frontend/Dockerfile
-          context: ./ecosystem-wallet/frontend
+          file: ./wallet-ui/frontend/Dockerfile
+          context: ./wallet-ui/frontend
           build-args: |
             "SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}"
+            "REACT_APP_APP_NAME=${{ vars.REACT_APP_APP_NAME }}"
+            "REACT_APP_OPENFORT_PUBLIC_KEY=${{ vars.REACT_APP_OPENFORT_PUBLIC_KEY }}"
+            "REACT_APP_SHIELD_PUBLIC_KEY=${{ vars.REACT_APP_SHIELD_PUBLIC_KEY }}"
+            "REACT_APP_BACKEND_URL=${{ vars.REACT_APP_BACKEND_URL }}"
+            "REACT_APP_OPENFORT_ECOSYSTEM_ID=${{ vars.REACT_APP_OPENFORT_ECOSYSTEM_ID }}"
 
       - name: Build and push sdk Docker image
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: europe-west1-docker.pkg.dev/openfort/dockers/sample-ecosystem-sdk:${{ github.event.release.tag_name }}
-          file: ./ecosystem-sdk/sdk-sample/Dockerfile
-          context: ./ecosystem-sdk/sdk-sample
+          file: ./usage-examples/wagmi-nextjs/Dockerfile
+          context: ./usage-examples/wagmi-nextjs
           build-args: |
             "SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}"
-            "NEXT_PUBLIC_CLIENT_ID=${{ secrets.NEXT_PUBLIC_CLIENT_ID }}"
             "NEXT_PUBLIC_POLICY_ID=${{ secrets.NEXT_PUBLIC_POLICY_ID }}"
 
       - name: Set up yq

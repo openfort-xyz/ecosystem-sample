@@ -5,28 +5,30 @@ The Ecosystem Wallet is a comprehensive solution for managing digital assets wit
 ## Project Structure
 
 ```
-ecosystem-wallet/
+wallet-ui/
 ├── frontend/
 └── backend/
 ```
 
 ### Frontend
 
-The `frontend` directory contains the user interface for the Ecosystem Wallet. It includes all necessary pages and components for a complete wallet experience. It comes with non-custodial signer management.
+The `frontend` directory contains the user interface for the Wallet. It includes all necessary pages and components for a complete wallet experience. It comes with non-custodial signer management with [Openfort](https://www.openfort.xyz/) but supports other signer solutions too.
 
-Key features:
-- Sending transactions
-- Signing messages
+**Customization**
+You can edit fonts, colors, and other styling via the theme and customTheme props. For detail, see the [ConnectKit docs](https://docs.family.co/connectkit/customization).
+
+**Key features:**
+- Transaction simulation
+- Transaction decoding
 - Creating session keys
 - Batched transactions
 - Signing typed messages
 
-### Backend
+and more ...
 
-The `backend` directory contains the server-side logic for the Ecosystem Wallet. Currently, it focuses on supporting non-custodial wallets through a shield encryption session creation.
+### Backend (optional)
 
-Key features:
-- API endpoint for non-custodial wallet operations
+When using [Openfort](https://www.openfort.xyz/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.xyz/docs/guides/react/wallets/embedded-signer#automatic-recovery), a backend is required to manage encryption sessions.
 
 ## Getting Started
 
