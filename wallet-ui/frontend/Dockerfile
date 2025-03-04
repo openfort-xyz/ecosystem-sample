@@ -1,16 +1,28 @@
-# Use an official Node runtime as the base image
-FROM node:20.11-slim
+FROM node:20-alpine AS builder
+
+ARG REACT_APP_APP_NAME
+ARG REACT_APP_OPENFORT_PUBLIC_KEY
+ARG REACT_APP_SHIELD_PUBLIC_KEY
+ARG REACT_APP_BACKEND_URL
+ARG REACT_APP_OPENFORT_ECOSYSTEM_ID
+
+ENV REACT_APP_APP_NAME=$REACT_APP_APP_NAME
+ENV REACT_APP_OPENFORT_PUBLIC_KEY=$REACT_APP_OPENFORT_PUBLIC_KEY
+ENV REACT_APP_SHIELD_PUBLIC_KEY=$REACT_APP_SHIELD_PUBLIC_KEY
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+ENV REACT_APP_OPENFORT_ECOSYSTEM_ID=$REACT_APP_OPENFORT_ECOSYSTEM_ID
 
 WORKDIR /app
-
 COPY . .
 
-# Install production dependencies.
+RUN apk add --no-cache jq
+# Install dependencies
 RUN yarn install
-
-# Install production dependencies.
 RUN yarn build
 
-# Start the api server
-CMD [ "yarn", "start" ]
+FROM nginx:1.25.4-alpine
+ENV NODE_ENV=production
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 3000
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,6 +1,6 @@
 {
   "name": "@rapidfire/id",
-  "version": "0.0.26",
+  "version": "0.0.71",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -24,7 +24,11 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@openfort/ecosystem-js": "^0.0.14"
+=======
+    "@openfort/ecosystem-js": "^0.1.10"
+>>>>>>> c4c8c08bc6f3db4703b87121dd917cd07f772ba1
   },
   "files": [
     "dist",
