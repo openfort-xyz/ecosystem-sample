@@ -1,12 +1,13 @@
 import { AppMetadata, Client, ThirdPartyAuthProvider } from "@openfort/ecosystem-js/client";
 
+export type { ProviderInterface } from "@openfort/ecosystem-js/client"
 class EcosystemWallet extends Client {
     constructor(appMetadata?: AppMetadata) {
         super({
             baseConfig: {
                 ecosystemWalletDomain: 'http://localhost:3000',
                 ecosystemId: 'test-226353cd-dd0e-4fba-8208-58dfe29d3581',
-                windowStrategy: 'iframe',
+                windowStrategy: 'popup',
             },
             appMetadata,
             appearance: {

@@ -1,9 +1,9 @@
 {
   "name": "ecosystem-frontend",
-  "version": "0.0.71",
+  "version": "0.0.73",
   "private": true,
   "dependencies": {
-    "@openfort/ecosystem-js": "^0.1.13",
+    "@openfort/ecosystem-js": "^0.1.14",
     "@tanstack/react-query": "^5.32.1",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",

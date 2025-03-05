@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { Connector, useChainId, useConnect } from 'wagmi';
+import { useAuth } from '../contexts/AuthContext';
 
 export function ConnectorsList() {
   const chainId = useChainId();
+  const { user } = useAuth();
   const router = useRouter();
   const { connectors, connect, error } = useConnect();
   const [activeConnector, setActiveConnector] = 
@@ -22,6 +24,10 @@ export function ConnectorsList() {
 
   const handleConnect = (connector: Connector) => {
     setActiveConnector(connector);
+    if(!user) {
+      router.push('/authentication');
+      return
+    }
     connect({ connector, chainId });
   };
 
