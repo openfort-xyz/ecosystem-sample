@@ -8,6 +8,7 @@ import {
   WalletShowCalls,
   Settings,
   UnsupportedMethod,
+  Recover,
 } from '@openfort/ecosystem-js/react';
 import { Route, Routes } from 'react-router-dom';
 import Loading from './Loading';
@@ -25,6 +26,8 @@ function App() {
       <Route path='/sign/wallet-send-calls' element={<WalletSendCalls />} />
       <Route path='/sign/eth-request-accounts' element={<EthRequestAccounts />} />
       <Route path='/settings' element={<Settings />} />
+      {/* Necessary recovery page when using OpenfortProvider with recoveryMethod Password */}
+      <Route path='/recover' element={<Recover />} />
       <Route path='/' element={<Loading />} />
       
       <Route path='*' element={<UnsupportedMethod />} />
