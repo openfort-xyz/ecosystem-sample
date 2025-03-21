@@ -59,6 +59,8 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
               {
                 shieldPublishableKey: process.env.REACT_APP_SHIELD_PUBLIC_KEY!,
                 recoveryMethod: RecoveryMethod.AUTOMATIC,
+                // A backend is required when using automatic recovery.
+                // Learn more about recovery methods: https://www.openfort.io/docs/guides/javascript/embedded-signer/recovery
                 getEncryptionSessionFn(getAccessToken) {
                   return getShieldSession(getAccessToken);
                 }
