@@ -1,3 +1,4 @@
+// Link your ecosystem wallet and modify the import to match the name of your SDK:
 import EcosystemWallet from '@rapidfire/id';
 
 export const ecosystemWalletInstance = new EcosystemWallet({

@@ -1,3 +1,4 @@
+// Link your ecosystem wallet and modify the import to match the name of your SDK:
 import { ProviderInterface } from '@rapidfire/id'
 import {
     ChainNotConfiguredError,
