@@ -6,7 +6,6 @@ class EcosystemWallet extends Client {
         super({
             baseConfig: {
                 ecosystemWalletDomain: 'http://localhost:3000',
-                ecosystemId: 'test-226353cd-dd0e-4fba-8208-58dfe29d3581',
                 windowStrategy: 'popup',
             },
             appMetadata,
@@ -29,7 +28,6 @@ class EcosystemWallet extends Client {
             }
         });
     }
-
 
     async authenticate(token: string) {
         return await super.authenticateWithThirdPartyProvider({ token: token, provider: ThirdPartyAuthProvider.FIREBASE });

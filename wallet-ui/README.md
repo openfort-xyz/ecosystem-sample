@@ -12,7 +12,7 @@ wallet-ui/
 
 ### Frontend
 
-The `frontend` directory contains the user interface for the Wallet. It includes all necessary pages and components for a complete wallet experience. It comes with non-custodial signer management with [Openfort](https://www.openfort.xyz/) but supports other signer solutions too.
+The `frontend` directory contains the user interface for the Wallet. It includes all necessary pages and components for a complete wallet experience. It comes with non-custodial signer management with [Openfort](https://www.openfort.io/) but supports other signer solutions too.
 
 **Customization**
 You can edit fonts, colors, and other styling via the theme and customTheme props. For detail, see the [ConnectKit docs](https://docs.family.co/connectkit/customization).
@@ -28,7 +28,7 @@ and more ...
 
 ### Backend (optional)
 
-When using [Openfort](https://www.openfort.xyz/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.xyz/docs/guides/react/wallets/embedded-signer#automatic-recovery), a backend is required to manage encryption sessions.
+When using [Openfort](https://www.openfort.io/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.io/docs/guides/react/wallets/embedded-signer#automatic-recovery), a backend is required to manage encryption sessions.
 
 ## Getting Started
 

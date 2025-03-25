@@ -3,7 +3,7 @@ import { authService } from '../services/authService';
 export const useAuthentication = () => {
   const signIn = async (email: string, password: string) => {
     try {
-      await authService.signIn(email, password);
+      return authService.signIn(email, password);
     } catch (error) {
       console.error(error);
       throw error;
@@ -12,7 +12,7 @@ export const useAuthentication = () => {
 
   const signInWithGoogle = async () => {
     try {
-      await authService.signInWithGoogle();
+      return authService.signInWithGoogle();
     } catch (error) {
       console.error(error);
       throw error;
@@ -21,7 +21,7 @@ export const useAuthentication = () => {
 
   const signUp = async (email: string, password: string) => {
     try {
-      await authService.signUp(email, password);
+      return authService.signUp(email, password);
     } catch (error) {
       console.error(error);
       throw error;

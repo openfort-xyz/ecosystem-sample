@@ -24,7 +24,7 @@ export function ConnectorsList() {
 
   const handleConnect = (connector: Connector) => {
     setActiveConnector(connector);
-    if(!user) {
+    if(!user && connector.id === 'com.rapidfire.id') {
       router.push('/authentication');
       return
     }

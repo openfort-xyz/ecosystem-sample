@@ -14,7 +14,7 @@ cp .env.local.example .env.local
 
 You will need an Openfort account in order to run the demo. Once you set up your account, go to the Openfort [developer dashboard](https://dashboard.openfort.xyz/apikeys) to find your API keys.
 
-To enable your embedded signer, you can follow the instructions [here](https://www.openfort.xyz/docs/guides/auth/embedded-signer).
+To enable your embedded signer, you can follow the instructions [here](https://www.openfort.io/docs/guides/auth/embedded-signer).
 
 ```
 NEXTAUTH_SHIELD_ENCRYPTION_SHARE=
@@ -30,10 +30,10 @@ NEXTAUTH_OPENFORT_SECRET_KEY=<replace-with-your-secret-key>
 
 You can create Policies and add Contracts in the Dashboard or with the API. This sample requires a Policy and a Contract to run. Once you've created them, and add its ID to `CollectButton`.
 
-`contract_id` is the ID of a [Contract](https://www.openfort.xyz/docs/reference/api/create-contract-object) for your contract. A contract has a chainId. 
+`contract_id` is the ID of a [Contract](https://www.openfort.io/docs/reference/api/create-contract-object) for your contract. A contract has a chainId. 
 If you need a test contract address, use 0x2522F4Fc9aF2E1954a3D13f7a5B2683A00a4543A (NFT contract deployed in 80002 Amoy).
 
-`policy_id` is the ID of a [Policy](https://www.openfort.xyz/docs/reference/api/create-a-policy-object) for your contract. A policy has a contract and chainId. For this demo to work, the policy must have both the contract and the register sessions as rules.
+`policy_id` is the ID of a [Policy](https://www.openfort.io/docs/reference/api/create-a-policy-object) for your contract. A policy has a contract and chainId. For this demo to work, the policy must have both the contract and the register sessions as rules.
 
 ```
 NEXT_PUBLIC_CHAIN_ID=
@@ -59,7 +59,7 @@ Update `.env`
 
 **4. Set up Firebase Auth in Openfort**
 
-To set up Firebase to authenticate players with Openfort, visit your [dashboard provider settings](https://dashboard.openfort.xyz/players/auth/providers). You can follow a guide on how to set up Firebase Auth in Openfort [here](https://www.openfort.xyz/docs/guides/auth/external-auth/firebase).
+To set up Firebase to authenticate players with Openfort, visit your [dashboard provider settings](https://dashboard.openfort.xyz/players/auth/providers). You can follow a guide on how to set up Firebase Auth in Openfort [here](https://www.openfort.io/docs/guides/auth/external-auth/firebase).
 
 <div align="center">
   <img

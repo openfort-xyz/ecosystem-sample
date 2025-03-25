@@ -1,6 +1,6 @@
 # Ecosystem Wallet Example - Rapidfire ID
 
-This is repository contains all code for the wallet Rapidfire ID. Its a demo using [`@openfort/ecosystem-js`](https://www.openfort.xyz/docs/guides/ecosystem).
+This is repository contains all code for the wallet Rapidfire ID. Its a demo using [`@openfort/ecosystem-js`](https://www.openfort.io/docs/guides/ecosystem).
 
 <div align="center">
     <video width="100%" autoplay loop muted playsinline>

@@ -3,6 +3,7 @@ import GoogleSignInButton from "./GoogleSignInButton";
 import { useAuthentication } from "../../hooks/useAuthentication";
 import Spinner from "../Shared/Spinner";
 import { useConnect } from "wagmi";
+import { ecosystemWalletInstance } from "@/src/utils/ecosystemWallet";
 
 const LoginSignupForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -26,29 +27,21 @@ const LoginSignupForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     event.preventDefault();
-    if (password.length === 0) return;
-    if (isLogin) {
-      // Assuming 'login' is provided for signing in
-      await signIn(email, password)
-        .then(()=>{
-          connectWallet()
-        })
-        .catch((error) => {
-          console.error("Failed to sign in:", error);
-          alert("Failed to sign in. Please try again.");
-        });
+    try {
+      let authCredential
+      if (password.length === 0) return;
+      if (isLogin) {
+        authCredential = await signIn(email, password) 
+      } else {
+        authCredential = await  signUp(email, password)
+      }
+      const idToken = await authCredential.user.getIdToken();
+      await ecosystemWalletInstance.authenticate(idToken);
+      connectWallet()
       setLoading(false);
-    } else {
-      // Assuming 'register' is provided for signing up
-      await signUp(email, password)
-        .then(()=>{
-          connectWallet()
-        })
-        .catch((error) => {
-          console.error("Failed to sign up:", error);
-          alert("Failed to sign up. Please try again.");
-        });
-      setLoading(false);
+    } catch (error) {          
+      console.error("Failed to sign in:", error);
+      alert("Failed to sign in. Please try again.");
     }
   };
 
@@ -57,7 +50,7 @@ const LoginSignupForm: React.FC = () => {
       <h2 className="text-left mb-2 font-semibold text-xl">
         {isLogin ? "Sign In" : "Sign Up"}
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 mb-4">
         <div>
           <input
             type="email"
@@ -85,8 +78,8 @@ const LoginSignupForm: React.FC = () => {
         >
           {loading ? <Spinner /> : isLogin ? "Sign In" : "Sign Up"}
         </button>
-        <GoogleSignInButton />
       </form>
+      <GoogleSignInButton connectWallet={connectWallet}/>
       <button
         onClick={handleToggle}
         className="mt-4 text-indigo-600 hover:underline"

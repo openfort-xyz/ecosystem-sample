@@ -13,7 +13,7 @@ Key features:
 
 To modify the SDK, you need to set the following parameters from the SDK Sample directory.
 
-From [index.ts](./src/index.ts) modify appearance and [branding](https://www.openfort.xyz/docs/guides/ecosystem/configuration/branding) parameters.
+From [index.ts](./src/index.ts) modify appearance and [branding](https://www.openfort.io/docs/guides/ecosystem/configuration/branding) parameters.
 
 ### Installation
 

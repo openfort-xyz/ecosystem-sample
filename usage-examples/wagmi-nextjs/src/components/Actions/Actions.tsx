@@ -34,14 +34,11 @@ export function Actions() {
   const { chains, switchChain, error: errorChain } = useSwitchChain()
 
   const handleDisconnectWallet = useCallback(async() => {
-    disconnect();
-    const provider = await connector?.getProvider();
     if(connector?.id === 'com.rapidfire.id') {
       // even though we are logged out here, the wallet still has the session.
       await logout();
     }
-    (provider as any)?.disconnect(); // this is needed because wagmi isn't calling the providers disconnect method
-    location.reload();
+    disconnect(); // this is needed because wagmi isn't calling the providers disconnect method
   }, [disconnect]);
 
   const handleShowCallsStatus = (inputValue: string) => {
