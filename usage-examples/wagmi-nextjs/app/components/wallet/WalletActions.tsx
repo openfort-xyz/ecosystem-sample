@@ -156,7 +156,7 @@ export function useWalletActions() {
     {
       icon: Send,
       title: "eth_sendTransaction",
-      buttonText: "Send Transaction",
+      buttonText: "Mint 1 USDC",
       onClick: handleExampleTx,
       isLoading: isPending,
       blockExplorerUrl: chain?.blockExplorers?.default.url!,
@@ -198,7 +198,7 @@ export function useWalletActions() {
     {
       icon: Shield,
       title: "wallet_grantPermissions",
-      buttonText: "Grant Session",
+      buttonText: "Grant Session Key",
       error: sessionError,
       onClick: handleGrantPermissions,
       blockExplorerUrl: chain?.blockExplorers?.default.url!,
@@ -208,7 +208,7 @@ export function useWalletActions() {
     {
       icon: Boxes,
       title: "wallet_sendCalls",
-      buttonText: "Send Batch",
+      buttonText: "Send Batch Transaction",
       onClick: handleSendCalls,
       blockExplorerUrl: chain?.blockExplorers?.default.url!,
       isLoading: callsPending,
