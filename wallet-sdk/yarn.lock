@@ -458,14 +458,14 @@
   dependencies:
     ethers "^6.0.2"
 
-"@openfort/ecosystem-js@^0.1.37":
-  version "0.1.37"
-  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.1.37.tgz#334528423986dd9d31c0846341d6053f7ac5e0fd"
-  integrity sha512-WoUCNx2ukBs8efy6Rdy4OWIhZdBN/IFCdBAfKVM3kU/Tv6WN6dUlk/DH2CVQ7wrg50mihuOb9mjk03aTZjpdzg==
+"@openfort/ecosystem-js@file:../../ecosystem-sdk/sdk":
+  version "0.1.38"
   dependencies:
     "@openchainxyz/abi-guesser" "1.0.2"
-    "@openfort/openfort-js" "^0.9.2"
+    "@openfort/openfort-js" "^0.9.4"
     "@stdlib/number-float64-base-normalize" "0.0.8"
+    "@stripe/crypto" "^0.0.4"
+    "@stripe/stripe-js" "^7.8.0"
     class-variance-authority "^0.7.1"
     clsx "^2.1.1"
     dayjs "^1.11.11"
@@ -483,10 +483,10 @@
     zod "3.24.2"
     zustand "^5.0.1"
 
-"@openfort/openfort-js@^0.9.2":
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/@openfort/openfort-js/-/openfort-js-0.9.2.tgz#ca8125cdec488c4986a3ad5f0f783ff64449c874"
-  integrity sha512-1bnFxGkK2wxIODj+NygruB2JmeMjp8GZ/aQQHK1C9fdNgsNyMeOaIE0HE6J4rARwge8cKOGVpHCAPFmts89FPQ==
+"@openfort/openfort-js@^0.9.4":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@openfort/openfort-js/-/openfort-js-0.9.5.tgz#eacc1f307ff283d75d59f92734d57da0f4ccc4c7"
+  integrity sha512-Yy3pITmS8bKatr/SGgIkRcuBGjyM/p9xzNvlqQ/k9tA0DhCdqnN5f/2ZXRGauBFxW7UTHbAWx4tsPSoPwB2n0Q==
   dependencies:
     "@ethersproject/hash" "^5.8.0"
     "@ethersproject/providers" "^5.8.0"
@@ -497,7 +497,6 @@
     axios-retry "^4.5.0"
     eventemitter3 "5.0.1"
     jose "^5.2.2"
-    penpal "^7.0.4"
 
 "@openfort/shield-js@^0.1.14":
   version "0.1.14"
@@ -1381,6 +1380,16 @@
     "@stdlib/utils-constructor-name" "^0.0.x"
     "@stdlib/utils-global" "^0.0.x"
 
+"@stripe/crypto@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@stripe/crypto/-/crypto-0.0.4.tgz#51dbcb3750c75a6b8a6c8775381af82367359146"
+  integrity sha512-gcD/aG0N90ZrNVppWYf9ADPECptw6PVtF67VIeaFP7fhgd2NvNx8erkzlcvk3VIVSY+bZ6YGX7c7cASoySX74Q==
+
+"@stripe/stripe-js@^7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-7.8.0.tgz#01390d31030f04b64a7ff13adcccbafd615c7b77"
+  integrity sha512-DNXRfYUgkZlrniQORbA/wH8CdFRhiBSE0R56gYU0V5vvpJ9WZwvGrz9tBAZmfq2aTgw6SK7mNpmTizGzLWVezw==
+
 "@types/estree@1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.6.tgz#628effeeae2064a1b4e79f78e81d87b7e5fc7b50"
@@ -2188,11 +2197,6 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
-
-penpal@^7.0.4:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/penpal/-/penpal-7.0.4.tgz#8bc5f3e14eeb38d20cdab90c68baa63c7d63db2b"
-  integrity sha512-O+M2V83oSaWQRDHghxYsq23TQgjAEzlrwemS0a1md16wZWqgOgmB35u4zluMwyqF6GnF/XT4v0N4QrrRgWAgSQ==
 
 picocolors@^1.0.0:
   version "1.1.1"
