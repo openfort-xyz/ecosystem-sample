@@ -5,6 +5,7 @@ class EcosystemWallet extends Client {
         super({
             baseConfig: {
                 ecosystemWalletDomain: preview ? 'https://id.sample.openfort.io/' : 'https://wallet.sample.openfort.io/',
+                // ecosystemWalletDomain: 'http://localhost:3000/',
                 windowStrategy: 'iframe',
             },
             appMetadata,
@@ -36,6 +37,8 @@ class EcosystemWallet extends Client {
     setPolicy(options?: { policy?: string; }): void {
         return super.setPolicy(options);
     }
+
+    // Add addFunds method
 
 }
 

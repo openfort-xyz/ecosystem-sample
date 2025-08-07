@@ -10,8 +10,12 @@ import {
   Settings,
   UnsupportedMethod,
   LoginMethods,
-  Recover
+  Recover,
+  WalletAddFunds,
+  
 } from '@openfort/ecosystem-js/react';
+
+
 import { Route, Routes } from 'react-router-dom';
 import Loading from './routes/components/Loading';
 import { Home } from './routes/sign/Home';
@@ -35,6 +39,8 @@ function App() {
       <Route path='/sign/wallet-send-calls' element={<ProtectedRoute component={WalletSendCalls} />} />
       <Route path='/sign/eth-request-accounts' element={<ProtectedRoute component={EthRequestAccounts} />} />
       <Route path='/sign/settings' element={<ProtectedRoute component={Settings} />} />
+      {/* <Route path='/sign/wallet-add-funds' element={<ProtectedRoute component={WalletAddFunds} />} /> */}
+      <Route path='/sign/wallet-add-funds' element={<WalletAddFunds />} />
       
       <Route path='/sign/authenticate' element={<LoginMethods />} />
       <Route path='/sign/recover' element={<Recover />} />

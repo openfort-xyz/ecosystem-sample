@@ -2142,6 +2142,8 @@
     "@openchainxyz/abi-guesser" "1.0.2"
     "@openfort/openfort-js" "^0.9.9"
     "@stdlib/number-float64-base-normalize" "0.0.8"
+    "@stripe/crypto" "^0.0.4"
+    "@stripe/stripe-js" "^7.8.0"
     class-variance-authority "^0.7.1"
     clsx "^2.1.1"
     dayjs "^1.11.11"
@@ -3321,6 +3323,16 @@
   dependencies:
     "@stdlib/utils-constructor-name" "^0.0.x"
     "@stdlib/utils-global" "^0.0.x"
+
+"@stripe/crypto@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@stripe/crypto/-/crypto-0.0.4.tgz#51dbcb3750c75a6b8a6c8775381af82367359146"
+  integrity sha512-gcD/aG0N90ZrNVppWYf9ADPECptw6PVtF67VIeaFP7fhgd2NvNx8erkzlcvk3VIVSY+bZ6YGX7c7cASoySX74Q==
+
+"@stripe/stripe-js@^7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-7.8.0.tgz#01390d31030f04b64a7ff13adcccbafd615c7b77"
+  integrity sha512-DNXRfYUgkZlrniQORbA/wH8CdFRhiBSE0R56gYU0V5vvpJ9WZwvGrz9tBAZmfq2aTgw6SK7mNpmTizGzLWVezw==
 
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   version "2.2.3"
