@@ -4,7 +4,7 @@ const FOOTER_LINKS = [
   {
     icon: FileText,
     title: "Documentation",
-    link:"https://www.openfort.io/docs/products/cross-app-wallet/setup"
+    link:"https://www.openfort.io/docs/products/cross-app-wallet"
   },
   {
     icon: Github,
