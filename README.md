@@ -1,6 +1,6 @@
 # Ecosystem Wallet Example - Rapidfire ID
 
-This is repository contains all code for the wallet Rapidfire ID. Its a demo using [`@openfort/ecosystem-js`](https://www.openfort.io/docs/products/cross-app-wallet).
+This repository contains all code for the wallet Rapidfire ID. It's a demo using [`@openfort/ecosystem-js`](https://www.openfort.io/docs/products/cross-app-wallet).
 
 <div align="center">
     <video width="100%" autoplay loop muted playsinline>
@@ -27,7 +27,7 @@ and much more...
 Every Ecosystem Wallet consists of two main projects: the **Wallet SDK** and the **Wallet UI**.
 
 - `wallet-sdk`: Makes your wallet discoverable to developers installing it. Can be published to a package manager like [NPM](https://www.npmjs.com/) for easy integration.
-- `wallet-ui`: The user interface for the wallet, including pages for sending transactions, signing messages, managing session keys, and more.
+- `wallet-ui`: The user interface for the wallet, including pages for sending transactions, adding funds, signing messages, managing session keys, and more.
 
 
 ## Wallet SDK
@@ -40,8 +40,8 @@ For more details, see the [Wallet SDK README](./wallet-sdk/README.md).
 
 The Ecosystem Wallet is a complete solution for managing digital assets within the ecosystem:
 
-- `frontend`: Contains the user interface for the wallet, including pages for sending transactions, signing messages, managing session keys, and more.
-- `backend`: Houses the server-side logic, currently focused on supporting non-custodial wallets.
+- `frontend`: Contains the user interface for the wallet, including pages for sending transactions, adding funds, signing messages, managing session keys, and more.
+- `backend`: Houses the server-side logic, currently focused on supporting non-custodial wallets and managing Stripe onramping sessions.
 
 For more information, refer to the [Wallet UI README](./wallet-ui/README.md).
 
