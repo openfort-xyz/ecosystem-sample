@@ -21,7 +21,7 @@ export function Header() {
         <span className="flex items-center">
           <Logo className="inline-block h-6 mr-2" />
           <span className="flex items-center font-bold hover:underline">
-            <a key={'openfort-documentation'} href={'https://www.openfort.io/docs/products/cross-app-wallet/setup'} 
+            <a key={'openfort-documentation'} href={'https://www.openfort.io/docs/products/cross-app-wallet'} 
               target="_blank" 
               rel="noopener noreferrer"
             >
