@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { BaseError } from 'wagmi';
 import { ecosystemWalletInstance } from "@/app/utils/ecosystemWallet";
 
@@ -26,12 +26,11 @@ export function useAddFunds(): [
     });
 
     try {
-      const res = await ecosystemWalletInstance.addFunds();
-      console.log(res);
-      const { clientSecret, sessionId, stripeUrl } = await res;
+      const response = await ecosystemWalletInstance.addFunds();
+      const { clientSecret, sessionId, stripeUrl } = response;
 
       if (stripeUrl) {
-        const stripeWindow = window.open(stripeUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes');
+        window.open(stripeUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes');
 
         await new Promise((resolve, reject) => {
           const ws = new WebSocket(`ws://localhost:3002`);

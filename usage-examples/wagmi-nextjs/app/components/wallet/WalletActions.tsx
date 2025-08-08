@@ -8,7 +8,7 @@ import {
 } from 'wagmi';
 import { useWriteContracts } from 'wagmi/experimental'
 import { useCallback, useState } from 'react';
-import { BaseError, createWalletClient, custom, isAddressEqual, parseAbi } from 'viem';
+import { BaseError, createWalletClient, custom, parseAbi } from 'viem';
 import { erc20Abi } from "@/app/utils/abi";
 import { baseSepolia } from 'wagmi/chains';
 import { erc7715Actions } from "viem/experimental";
@@ -20,6 +20,7 @@ export function useWalletActions() {
   const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [sessionError, setSessionError] = useState<BaseError | null>(null);
   const { connector, chainId, address, chain } = useAccount();
+
   // Transaction hooks
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
@@ -34,7 +35,7 @@ export function useWalletActions() {
   // Transaction handlers
   const handleAddFunds = useCallback(() => {
     addFunds();
-  }, [addFunds])
+  }, [addFundsData, isAddingFunds, addFundsError])
 
   const handleExampleTx = useCallback(() => {
     writeContract({

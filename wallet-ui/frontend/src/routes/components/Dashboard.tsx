@@ -9,7 +9,7 @@ import { useAddressTransfers } from "../../hooks/useBlockscoutApi";
 import { useSwapAssets } from "../../hooks/useSwapAssets";
 import { useErc20Info } from '../../hooks/useTokenInfo'
 import { config } from "../../lib/Wagmi";
-import { sum, ValueFormatter, DateFormatter, StringFormatter } from "./utils";
+import { sum, ValueFormatter, DateFormatter, StringFormatter } from "../../utils";
 import { ShowMore } from "./ShowMore";
 import { TruncatedAddress } from "./TruncatedAddress";
 import { LogoMark } from "./LogoMark";
