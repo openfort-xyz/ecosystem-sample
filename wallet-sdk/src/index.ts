@@ -4,7 +4,7 @@ class EcosystemWallet extends Client {
     constructor(appMetadata?: AppMetadata) {
         super({
             baseConfig: {
-                ecosystemWalletDomain: 'https://id.sample.openfort.xyz/',
+                ecosystemWalletDomain: 'https://id.sample.openfort.io/',
                 windowStrategy: 'iframe',
             },
             appMetadata,
@@ -36,7 +36,6 @@ class EcosystemWallet extends Client {
     setPolicy(options?: { policy?: string; }): void {
         return super.setPolicy(options);
     }
-
 }
 
 export default EcosystemWallet;

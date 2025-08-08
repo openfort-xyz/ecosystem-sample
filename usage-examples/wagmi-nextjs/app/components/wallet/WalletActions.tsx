@@ -1,4 +1,4 @@
-import { Send, MessageSquare, Key, Shield, Boxes } from "lucide-react";
+import { Send, MessageSquare, Key, Shield, Boxes, HandCoins } from "lucide-react";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
@@ -14,14 +14,17 @@ import { baseSepolia } from 'wagmi/chains';
 import { erc7715Actions } from "viem/experimental";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { createSiweMessage } from 'viem/siwe';
+import { useAddFunds } from '@/app/hooks/useAddFunds';
 
 export function useWalletActions() {
   const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [sessionError, setSessionError] = useState<BaseError | null>(null);
   const { connector, chainId, address, chain } = useAccount();
+
   // Transaction hooks
-  const { data: hash, writeContract, isPending, error  } = useWriteContract();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const [addFunds, addFundsData, isAddingFunds, addFundsError] = useAddFunds();
 
   // Signature hooks
   const { signTypedData, data: typedSignature, isPending: isSigningTyped, error: typedError } = useSignTypedData();
@@ -30,6 +33,10 @@ export function useWalletActions() {
   const { data: bundleIdentifier, isPending: callsPending, error: callsError, writeContracts } = useWriteContracts();
 
   // Transaction handlers
+  const handleAddFunds = useCallback(() => {
+    addFunds();
+  }, [addFundsData, isAddingFunds, addFundsError])
+
   const handleExampleTx = useCallback(() => {
     writeContract({
       abi: erc20Abi,
@@ -80,7 +87,7 @@ export function useWalletActions() {
       nonce: 'deadbeef',
     })
     signMessage({ message: message });
-  },[signMessage, chainId, chainId])
+  }, [signMessage, chainId, chainId])
 
   const handlePersonalSign = useCallback(() => {
     signMessage({ message: 'Hello World' });
@@ -99,26 +106,26 @@ export function useWalletActions() {
           address: '0xdc2de190a921d846b35eb92d195c9c3d9c08d1c2',
           abi: parseAbi(['function transfer(address,uint256) returns (bool)']),
           functionName: 'transfer',
-          args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B',10000000000000000],
+          args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B', 10000000000000000],
         },
       ],
     });
   }, [writeContracts]);
 
-  const handleGrantPermissions = useCallback(async() => {
+  const handleGrantPermissions = useCallback(async () => {
     const provider = await connector?.getProvider()
 
     const privateKey = generatePrivateKey();
     const accountSession = privateKeyToAccount(privateKey).address;
     const walletClient = createWalletClient({
-      chain: chain, 
+      chain: chain,
       transport: custom(provider as any),
-    }).extend(erc7715Actions()) 
-    try{
+    }).extend(erc7715Actions())
+    try {
       await walletClient.grantPermissions({
-        signer:{
+        signer: {
           type: "key",
-          data:{
+          data: {
             id: accountSession
           }
         },
@@ -132,7 +139,7 @@ export function useWalletActions() {
             },
             policies: [
               {
-                type: 
+                type:
                 {
                   custom: "usage-limit"
                 },
@@ -149,10 +156,21 @@ export function useWalletActions() {
       const error = e as BaseError
       setSessionError(error)
     }
-  },[connector, chain])
+  }, [connector, chain])
 
 
   const actions = [
+    {
+      icon: HandCoins,
+      title: "wallet_addFunds",
+      buttonText: "Add Funds",
+      onClick: handleAddFunds,
+      blockExplorerUrl: chain?.blockExplorers?.default.url!,
+      isLoading: isAddingFunds,
+      error: addFundsError,
+      hash: addFundsData?.hash as `0x${string}` | undefined,
+      isConfirmed: addFundsData?.isConfirmed,
+    },
     {
       icon: Send,
       title: "eth_sendTransaction",
@@ -203,7 +221,7 @@ export function useWalletActions() {
       onClick: handleGrantPermissions,
       blockExplorerUrl: chain?.blockExplorers?.default.url!,
       isLoading: false,
-      payload: !sessionError && sessionKey? sessionKey : undefined,
+      payload: !sessionError && sessionKey ? sessionKey : undefined,
     },
     {
       icon: Boxes,
@@ -214,7 +232,7 @@ export function useWalletActions() {
       isLoading: callsPending,
       error: callsError,
       hash: bundleIdentifier?.id as `0x${string}` | undefined,
-    },
+    }
   ];
 
   return { actions };
