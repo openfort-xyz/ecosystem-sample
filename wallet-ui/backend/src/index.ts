@@ -32,23 +32,27 @@ app.use(express.json());
 app.post("/api/create-onramp-session", async (req, res) => {
     try {
         const transaction_details = req.body;
-        console.log("transaction_details", transaction_details)
+
+        const params = new URLSearchParams();
+        params.append('source_currency', 'usd');
+        // params.append('source_currency', 'eur');
+        params.append('source_amount', transaction_details["amount"]);
+        params.append('wallet_address', transaction_details["address"]);
+        params.append('lock_wallet_address', 'true');
+        params.append('destination_networks[]', 'ethereum');
+        params.append('destination_network', 'ethereum');
+
+        // params.append('destination_currency', 'usdc');
+        params.append('destination_currency', transaction_details["currency"].toLowerCase());
+
         const onrampSession = await fetch("https://api.stripe.com/v1/crypto/onramp_sessions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Authorization": `Bearer ${process.env.STRIPE_SECRET_KEY}`
             },
-            body: new URLSearchParams({
-                source_currency: "usd",
-                source_amount: transaction_details["amount"],
-                wallet_address: transaction_details["address"],
-                lock_wallet_address: "true",
-                destination_network: transaction_details["chain"],
-                // destination_currency: transaction_details["destinationCurrency"].toLowerCase(),
-            })
+            body: params
         });
-        // console.log("onrampSession", await onrampSession.json())
         res.send(await onrampSession.json());
     } catch (error) {
         console.error(error);

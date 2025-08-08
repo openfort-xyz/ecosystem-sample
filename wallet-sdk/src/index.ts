@@ -37,9 +37,6 @@ class EcosystemWallet extends Client {
     setPolicy(options?: { policy?: string; }): void {
         return super.setPolicy(options);
     }
-
-    // Add addFunds method
-
 }
 
 export default EcosystemWallet;
