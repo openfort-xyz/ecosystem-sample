@@ -26,57 +26,20 @@ export function useAddFunds(): [
     });
 
     try {
-      const response = await ecosystemWalletInstance.addFunds();
-      const { clientSecret, sessionId, stripeUrl } = response;
-
-      if (stripeUrl) {
-        window.open(stripeUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes');
-
-        await new Promise((resolve, reject) => {
-          const ws = new WebSocket(`ws://localhost:3002`);
-
-          ws.onopen = () => {
-            ws.send(JSON.stringify({ sessionId }));
-            console.log("WebSocket connection established");
-          };
-
-          ws.onmessage = (event) => {
-            const { status, transactionDetails } = JSON.parse(event.data);
-            console.log("WebSocket message received: ", status);
-            switch (status) {
-              case 'fulfillment_complete':
-                setAddFundsData({
-                  hash: transactionDetails.transaction_id,
-                  isConfirmed: true,
-                });
-                ws.close();
-                resolve(true);
-                break;
-
-              case 'rejected':
-                setAddFundsData({
-                  hash: undefined,
-                  isConfirmed: false,
-                });
-                ws.close();
-                throw new Error('Transaction rejected');
-              // Extra: Add more statuses and handle them as needed
-            }
-          };
-
-          ws.onclose = () => {
-            console.log('WebSocket connection closed');
-          };
-
-          ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-            reject(new Error('Internal error'));
-          };
-        });
-
-      } else {
-        throw new Error('An error occurred while adding funds');
+      // Toggle the onramp UI
+      const { stripeUrl } = await ecosystemWalletInstance.addFunds("toggle");
+      console.log(stripeUrl)
+      if (!stripeUrl || typeof stripeUrl !== 'string') {
+        throw new Error('Failed to get data from onramp');
       }
+      window.open(stripeUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes,noopener=true,noreferrer=true');
+
+      // Await for the acc balance to update
+      const { transactionHash } = await ecosystemWalletInstance.addFunds("watch");
+      setAddFundsData({
+        hash: transactionHash,
+        isConfirmed: true,
+      });
     } catch (error) {
       setAddFundsError(error as BaseError);
     } finally {
