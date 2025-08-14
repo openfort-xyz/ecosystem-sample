@@ -31,8 +31,8 @@ export const defaultAssets: Record<
       symbol: 'ETH',
     },
     {
-      address: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
-      decimals: 6,
+      address: '0xdC2de190a921D846B35EB92d195c9c3D9C08d1C2',
+      decimals: 18,
       logo: '/icons/usdc.svg',
       name: 'USD Coin',
       symbol: 'USDC',

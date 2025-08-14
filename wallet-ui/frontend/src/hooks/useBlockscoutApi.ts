@@ -238,7 +238,7 @@ export type TokenTransfer = {
     watchlist_names: Array<any>
   }
   token: {
-    address: string
+    address_hash: string
     circulating_market_cap: any
     decimals: string
     exchange_rate: any
