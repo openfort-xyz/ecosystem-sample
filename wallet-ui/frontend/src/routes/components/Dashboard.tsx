@@ -147,7 +147,7 @@ export function Dashboard() {
                     <div className="inline-block w-[65px]">
                         <span className="rounded-2xl bg-gray-300 px-2 py-1 font-[500] text-gray-400 text-xs">
                         <TokenSymbol
-                            address={transfer?.token.address as Address.Address}
+                            address={transfer?.token.address_hash as Address.Address}
                             display="symbol"
                         />
                         </span>
