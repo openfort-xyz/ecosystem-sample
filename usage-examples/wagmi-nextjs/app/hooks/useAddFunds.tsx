@@ -27,19 +27,24 @@ export function useAddFunds(): [
 
     try {
       // Toggle the onramp UI
-      const { stripeUrl } = await ecosystemWalletInstance.addFunds("toggle");
-      console.log(stripeUrl)
-      if (!stripeUrl || typeof stripeUrl !== 'string') {
+      let result = await ecosystemWalletInstance.addFunds("toggle");
+      if (!result) throw new Error('Failed to get data from onramp');
+      let { onrampUrl, transactionHash } = result;
+
+      if (transactionHash) {
+        setAddFundsData({ hash: transactionHash, isConfirmed: true });
+      } else if (onrampUrl) {
+        window.open(onrampUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes,noopener=true,noreferrer=true');
+        
+        // Wait for balance update
+        result = await ecosystemWalletInstance.addFunds("watch");
+        if (!result) throw new Error('Failed to get transaction hash');
+        ({ onrampUrl, transactionHash } = result);
+
+        setAddFundsData({ hash: transactionHash, isConfirmed: true });
+      } else {
         throw new Error('Failed to get data from onramp');
       }
-      window.open(stripeUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes,noopener=true,noreferrer=true');
-
-      // Await for the acc balance to update
-      const { transactionHash } = await ecosystemWalletInstance.addFunds("watch");
-      setAddFundsData({
-        hash: transactionHash,
-        isConfirmed: true,
-      });
     } catch (error) {
       setAddFundsError(error as BaseError);
     } finally {
