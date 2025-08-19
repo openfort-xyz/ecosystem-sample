@@ -7,7 +7,7 @@ import { useReadBalances } from './useReadBalances'
 
 /** returns assets with prices: default assets + assets from balances */
 export function useSwapAssets({ chainId }: { chainId: ChainId }) {
-  const { data: balances } = useReadBalances({ chainId })
+  const { data: balances, refetch: refetchBalances } = useReadBalances({ chainId })
 
   const { data, isLoading, isPending, refetch } = useQuery({
     queryFn: async ({ queryKey: [, chainId] }) => {
@@ -16,6 +16,8 @@ export function useSwapAssets({ chainId }: { chainId: ChainId }) {
           asset.address !== '0x0000000000000000000000000000000000000000',
       )
       if (!defaultAssets_ || !balances) return []
+
+      refetchBalances()
 
       const balancesAssets = balances.map((balance) => ({
         address: balance.address,
