@@ -23,12 +23,15 @@ You can edit fonts, colors, and other styling via the theme and customTheme prop
 - Creating session keys
 - Batched transactions
 - Signing typed messages
+- Fiat-to-crypto onramp
 
 and more ...
 
-### Backend (optional)
+### Backend
 
 When using [Openfort](https://www.openfort.io/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.io/docs/products/embedded-wallet/javascript/signer/recovery#automatic-recovery), a backend is required to manage encryption sessions.
+
+For the onramp functionality, such as using [Stripe](https://docs.stripe.com/crypto/onramp/standalone-onramp-guide#mint-session-redirect-url), a backend is required. It must implement an endpoint to create a new onramp session for each user visit.
 
 ## Getting Started
 
@@ -48,6 +51,10 @@ REACT_APP_OPENFORT_ECOSYSTEM_ID=
 OPENFORT_SECRET_KEY=
 OPENFORT_PUBLIC_KEY=
 SHIELD_PUBLIC_KEY=
+SHIELD_SECRET_KEY=
+ENCRYPTION_SHARE=
+STRIPE_SECRET_KEY=
+PORT=
 ```
 
 ### Installation

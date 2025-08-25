@@ -50,6 +50,7 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
           }}
           theme='midnight'
           logoUrl='https://purple-magnificent-bat-958.mypinata.cloud/ipfs/QmfQrh2BiCzugFauYF9Weu9SFddsVh9qV82uw43cxH8UDV'
+          backendUrl={process.env.REACT_APP_BACKEND_URL!}
         >
           <OpenfortProvider
             thirdPartyAuthentication={false}
@@ -67,7 +68,7 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
                 return getShieldSession(getAccessToken);
               }
             }} 
-            overrides={{}}          >
+            overrides={{}}>
             {children}
           </OpenfortProvider>
           </EcosystemProvider>

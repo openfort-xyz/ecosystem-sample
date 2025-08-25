@@ -24,7 +24,7 @@ export function useReadBalances({
 
   const account = useAccount()
   const accountAddress = address ?? account.address
-  const { data: ethBalance } = useBalance({ address: accountAddress, chainId })
+  const { data: ethBalance, refetch: refetchEthBalance } = useBalance({ address: accountAddress, chainId })
 
   const { data, isLoading, isPending, refetch } = useReadContracts({
     contracts: assets.map((asset) => ({
@@ -40,6 +40,7 @@ export function useReadBalances({
           ...assets[index],
         }))
 
+        refetchEthBalance()
         result.unshift({ balance: ethBalance?.value ?? BigInt(0), ...ethAsset })
 
         return result as ReadonlyArray<{

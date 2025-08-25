@@ -139,7 +139,8 @@ export function useAddressTransfers({
       isPending: result.some((query) => query.isPending),
       isSuccess: result.every((query) => query.isSuccess),
     }),
-    queries: userChainIds.map((chainId) => ({
+    queries: userChainIds.flatMap((chainId) => [{
+      // 1. Token transfers
       enabled: account.status === 'connected',
       queryFn: async () => {
         const apiEndpoint = addressApiEndpoint(chainId)
@@ -163,7 +164,34 @@ export function useAddressTransfers({
       },
       queryKey: ['address-transfers', userAddress, chainId],
       refetchInterval: 2_500,
-    })),
+    },
+    {
+      // 2. Transactions
+      enabled: account.status === 'connected',
+      queryFn: async () => {
+        const apiEndpoint = addressApiEndpoint(chainId)
+        const url = `${apiEndpoint}/addresses/${userAddress}/transactions`
+        const response = await fetch(url)
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch transactions: ${response.statusText}`,
+          )
+        }
+        const data = await response.json()
+        return {
+          chainId,
+          // type: 'transactions',
+          items: data.items,
+          next_page_params: data.next_page_params,
+        } as {
+          chainId: number
+          items: Array<TokenTransfer> | Array<Transaction>
+          next_page_params: null
+        }
+      },
+      queryKey: ['transactions', userAddress, chainId],
+      refetchInterval: 2_500,
+    }]),
   })
 
   const refetch = React.useCallback(
@@ -172,6 +200,11 @@ export function useAddressTransfers({
         .invalidateQueries({
           queryKey: ['address-transfers', userAddress],
         })
+        .then(() =>
+          Query.client.invalidateQueries({
+            queryKey: ['transactions', userAddress],
+          })
+        )
         .then(() => refetchBalances()),
     [userAddress, refetchBalances],
   )
@@ -238,7 +271,7 @@ export type TokenTransfer = {
     watchlist_names: Array<any>
   }
   token: {
-    address: string
+    address_hash: string
     circulating_market_cap: any
     decimals: string
     exchange_rate: any
@@ -256,6 +289,74 @@ export type TokenTransfer = {
   }
   transaction_hash: string
   type: string
+}
+
+export type Transaction = {
+  priority_fee: string
+  raw_input: string
+  result: string
+  hash: string
+  max_fee_per_gas: string
+  revert_reason: string | null
+  confirmation_duration: [number, number]
+  transaction_burnt_fee: string
+  type: number
+  token_transfers_overflow: any
+  confirmations: number
+  position: number
+  max_priority_fee_per_gas: string
+  transaction_tag: any
+  created_contract: any
+  value: string
+  from: {
+    ens_domain_name: any
+    hash: string
+    implementations: Array<any>
+    is_contract: boolean
+    is_scam: boolean
+    is_verified: boolean
+    metadata: any
+    name: any
+    private_tags: Array<any>
+    proxy_type: any
+    public_tags: Array<any>
+    watchlist_names: Array<any>
+  }
+  gas_used: string
+  status: string
+  to: {
+    ens_domain_name: any
+    hash: string
+    implementations: Array<any>
+    is_contract: boolean
+    is_scam: boolean
+    is_verified: boolean
+    metadata: any
+    name: any
+    private_tags: Array<any>
+    proxy_type: any
+    public_tags: Array<any>
+    watchlist_names: Array<any>
+  }
+  authorization_list: Array<any>
+  method: string | null
+  fee: {
+    type: string
+    value: string
+  }
+  actions: Array<any>
+  gas_limit: string
+  gas_price: string
+  decoded_input: any
+  token_transfers: any
+  base_fee_per_gas: string
+  timestamp: string
+  nonce: number
+  historic_exchange_rate: any
+  transaction_types: Array<string>
+  exchange_rate: any
+  block_number: number
+  has_error_in_internal_transactions: boolean
 }
 
 export function useTransactionsHistory({

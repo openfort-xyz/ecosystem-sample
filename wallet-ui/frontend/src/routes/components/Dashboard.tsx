@@ -43,7 +43,7 @@ export function Dashboard() {
   );
 
   const filteredTransfers = React.useMemo(() => {
-    return transfers
+    const transfersData = transfers
       ?.filter((c) =>
         selectedChains.some((cc) => cc === c?.chainId?.toString())
       )
@@ -53,6 +53,11 @@ export function Dashboard() {
           ...item,
         }))
       );
+    return transfersData?.sort((a, b) => {
+      const dateA = new Date(a?.timestamp ?? '').getTime();
+      const dateB = new Date(b?.timestamp ?? '').getTime();
+      return dateB - dateA; 
+    });
   }, [transfers, selectedChains]);
 
   const totalBalance = React.useMemo(() => {
@@ -64,7 +69,7 @@ export function Dashboard() {
       )
     );
   }, [assets]);
-  
+
   return (
     <div className="flex min-h-screen flex-col justify-between">
       <div className="flex flex-1 flex-col w-full px-6 py-12">
@@ -90,125 +95,140 @@ export function Dashboard() {
           <div className="h-6" />
           <hr className="border-gray-200" />
           <div className="h-4" />
-        <details
+          <details
             className="group tabular-nums"
             open={filteredTransfers?.length > 0}
-        >
+          >
             <summary className='relative cursor-default list-none pr-1 font-semibold text-lg after:absolute after:right-1 after:font-normal after:text-gray-400 after:text-sm after:content-["[+]"] group-open:after:content-["[–]"]'>
-            History
+              History
             </summary>
 
             <PaginatedTable
-            columns={[
+              columns={[
                 { header: 'Time', key: 'time' },
                 { header: 'Account', key: 'recipient' },
                 { align: 'right', header: 'Amount', key: 'amount' },
-            ]}
-            data={filteredTransfers}
-            emptyMessage="No transactions yet"
-            renderRow={(transfer) => {
-                const amount = Number.parseFloat(
-                ValueFormatter.format(
-                    BigInt(transfer?.total.value ?? 0),
-                    Number(transfer?.total.decimals ?? 0),
-                ),
-                ).toFixed(2)
+              ]}
+              data={filteredTransfers}
+              emptyMessage="No transactions yet"
+              renderRow={(transfer) => {
+                const transactionHash = transfer && ('transaction_hash' in transfer ? transfer.transaction_hash : transfer.hash)
+                const token = transfer && ('token' in transfer ? transfer.token.address_hash : "ETH")
+
+                let amount: string;
+                if (transfer && 'total' in transfer) {
+                  amount = Number.parseFloat(
+                    ValueFormatter.format(
+                      BigInt(transfer?.total.value ?? 0),
+                      Number(transfer?.total.decimals ?? 0),
+                    ),
+                  ).toFixed(2)
+                } else {
+                  amount = Number.parseFloat(
+                    ValueFormatter.format(
+                      BigInt(transfer?.value ?? 0),
+                      18,
+                    ),
+                  ).toFixed(2);
+                }
 
                 return (
-                <tr
+                  <tr
                     className="text-xs sm:text-sm"
-                    key={`${transfer?.transaction_hash}-${transfer?.block_number}`}
-                >
+                    key={`${transactionHash}-${transfer?.block_number}`}
+                  >
                     <td className="py-1 text-left">
-                    <a
+                      <a
                         className="flex flex-row items-center"
-                        href={`${getExplorer(transfer?.chainId)}/tx/${transfer?.transaction_hash}`}
+                        href={`${getExplorer(transfer?.chainId)}/tx/${transactionHash}`}
                         rel="noreferrer"
                         target="_blank"
-                    >
+                      >
                         <ExternalLink className="mr-1 size-4 text-gray-400" />
                         <span className="min-w-[50px] text-gray-500 sm:min-w-[65px]">
-                        {DateFormatter.ago(new Date(transfer?.timestamp ?? ''))}{' '}
-                        ago
+                          {DateFormatter.ago(new Date(transfer?.timestamp ?? ''))}{' '}
+                          ago
                         </span>
-                    </a>
+                      </a>
                     </td>
                     <td className="flex min-w-full items-center py-1 text-left font-medium">
-                    <div className="my-0.5 flex flex-row items-center gap-x-2 rounded-full bg-gray-300 p-0.5">
+                      <div className="my-0.5 flex flex-row items-center gap-x-2 rounded-full bg-gray-300 p-0.5">
                         <PersonStanding className="size-4 rounded-full text-gray-400" />
-                    </div>
-                    <TruncatedAddress
+                      </div>
+                      <TruncatedAddress
                         address={transfer?.to.hash ?? ''}
                         className="ml-2"
-                    />
+                      />
                     </td>
                     <td className="py-1 text-right text-gray-400">
-                    <span className="text-md">{amount}</span>
-                    <div className="inline-block w-[65px]">
+                      <span className="text-md">{amount}</span>
+                      <div className="inline-block w-[65px]">
                         <span className="rounded-2xl bg-gray-300 px-2 py-1 font-[500] text-gray-400 text-xs">
-                        <TokenSymbol
-                            address={transfer?.token.address as Address.Address}
-                            display="symbol"
-                        />
+                          {token === "ETH" ? "ETH" : (
+                            <TokenSymbol
+                              address={token as Address.Address}
+                              display="symbol"
+                            />
+                          )}
                         </span>
-                    </div>
+                      </div>
                     </td>
-                </tr>
+                  </tr>
                 )
-            }}
-            showMoreText="more transactions"
+              }}
+              showMoreText="more transactions"
             />
-        </details>
-        <div className="h-6" />
+          </details>
+          <div className="h-6" />
           <hr className="border-gray-200" />
           <div className="h-4" />
 
-      <details className="group" open={assets && assets?.length > 0}>
-        <summary className='relative cursor-default list-none pr-1 font-semibold text-lg after:absolute after:right-1 after:font-normal after:text-gray-400 after:text-sm after:content-["[+]"] group-open:after:content-["[–]"]'>
-          <span>Assets</span>
+          <details className="group" open={assets && assets?.length > 0}>
+            <summary className='relative cursor-default list-none pr-1 font-semibold text-lg after:absolute after:right-1 after:font-normal after:text-gray-400 after:text-sm after:content-["[+]"] group-open:after:content-["[–]"]'>
+              <span>Assets</span>
 
-        </summary>
+            </summary>
 
-        <PaginatedTable
-          columns={[
-            { header: 'Name', key: 'name', width: 'w-[40%]' },
-            { align: 'right', header: '', key: 'balance', width: 'w-[20%]' },
-            { align: 'right', header: '', key: 'symbol', width: 'w-[20%]' },
-            { align: 'right', header: '', key: 'action', width: 'w-[20%]' },
-            { align: 'right', header: '', key: 'action', width: 'w-[20%]' },
-          ]}
-          data={assets}
-          emptyMessage="No balances available for this account"
-          renderRow={(asset) => (
-            <AssetRow
-              address={asset.address}
-              decimals={asset.decimals}
-              key={asset.address}
-              logo={asset.logo}
-              name={asset.name}
-              price={asset.price}
-              symbol={asset.symbol}
-              value={asset.balance}
+            <PaginatedTable
+              columns={[
+                { header: 'Name', key: 'name', width: 'w-[40%]' },
+                { align: 'right', header: '', key: 'balance', width: 'w-[20%]' },
+                { align: 'right', header: '', key: 'symbol', width: 'w-[20%]' },
+                { align: 'right', header: '', key: 'action', width: 'w-[20%]' },
+                { align: 'right', header: '', key: 'action', width: 'w-[20%]' },
+              ]}
+              data={assets}
+              emptyMessage="No balances available for this account"
+              renderRow={(asset) => (
+                <AssetRow
+                  address={asset.address}
+                  decimals={asset.decimals}
+                  key={asset.address}
+                  logo={asset.logo}
+                  name={asset.name}
+                  price={asset.price}
+                  symbol={asset.symbol}
+                  value={asset.balance}
+                />
+              )}
+              showMoreText="more assets"
             />
-          )}
-          showMoreText="more assets"
-        />
-      </details>
-      <div className="h-6" />
-      <hr className="border-gray-200" />
-      <div className="h-4" />
+          </details>
+          <div className="h-6" />
+          <hr className="border-gray-200" />
+          <div className="h-4" />
           <div className="flex gap-2">
             <Button>
               <a href="https://t.me/openfort" rel="noreferrer" target="_blank">
                 Help
               </a>
             </Button>
-            <Button 
-              onClick={async() => {
+            <Button
+              onClick={async () => {
                 await logout()
                 window.location.reload()
 
-              }} 
+              }}
               variant="primary">
               Sign out
             </Button>
@@ -296,21 +316,21 @@ function PaginatedTable<T>({
 }
 
 function TokenSymbol({
-    address,
-    display,
-  }: {
-    address?: Address.Address | undefined
-    display?: 'symbol' | 'name' | 'address'
-  }) {
-    const { data: tokenInfo } = useErc20Info(address)
-  
-    if (!address) return null
-  
-    if (!tokenInfo?.symbol || display === 'address')
-      return StringFormatter.truncate(address, { end: 4, start: 4 })
-  
-    return display === 'name' ? tokenInfo.name : tokenInfo.symbol
-  }
+  address,
+  display,
+}: {
+  address?: Address.Address | undefined
+  display?: 'symbol' | 'name' | 'address'
+}) {
+  const { data: tokenInfo } = useErc20Info(address)
+
+  if (!address) return null
+
+  if (!tokenInfo?.symbol || display === 'address')
+    return StringFormatter.truncate(address, { end: 4, start: 4 })
+
+  return display === 'name' ? tokenInfo.name : tokenInfo.symbol
+}
 
 function AssetRow({
   address,
@@ -336,28 +356,28 @@ function AssetRow({
 
   return (
     <tr className="font-normal sm:text-sm">
-        <>
-          <td className="w-[80%]">
-            <div className="flex items-center gap-x-2 py-2">
-              <img alt="asset icon" className="size-5 sm:size-6" src={logo} />
-              <span className="font-medium text-sm sm:text-md">{name}</span>
-            </div>
-          </td>
-          <td className="w-[20%] text-right text-md">{formattedBalance}</td>
-          <td className="w-[20%] pl-3.5 text-right text-md">
-            ${ValueFormatter.formatToPrice(price)}
-          </td>
-          <td className="w-[20%] pr-1.5 pl-3 text-left text-sm">
-            <span className="rounded-2xl bg-gray-100 px-2 py-1 font-[500] text-gray-400 text-xs">
-              {symbol}
-            </span>
-          </td>
-          <td className="text-right text-sm">
-            <div className="flex">
+      <>
+        <td className="w-[80%]">
+          <div className="flex items-center gap-x-2 py-2">
+            <img alt="asset icon" className="size-5 sm:size-6" src={logo} />
+            <span className="font-medium text-sm sm:text-md">{name}</span>
+          </div>
+        </td>
+        <td className="w-[20%] text-right text-md">{formattedBalance}</td>
+        <td className="w-[20%] pl-3.5 text-right text-md">
+          ${ValueFormatter.formatToPrice(price)}
+        </td>
+        <td className="w-[20%] pr-1.5 pl-3 text-left text-sm">
+          <span className="rounded-2xl bg-gray-100 px-2 py-1 font-[500] text-gray-400 text-xs">
+            {symbol}
+          </span>
+        </td>
+        <td className="text-right text-sm">
+          <div className="flex">
 
-            </div>
-          </td>
-        </>
+          </div>
+        </td>
+      </>
     </tr>
   )
 }
