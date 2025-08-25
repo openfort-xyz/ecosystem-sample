@@ -18,7 +18,7 @@ Visit the [live demo](https://rapidfire.sample.openfort.io/).
 - 🎨 Beautiful Themes — Predesigned themes or full customization.
 - 🤝 Cross-platform support with [MWP](https://github.com/MobileWalletProtocol) for Unity, React Native and more.
 - 🔑 Non-custodial key management out of the box.
-- 🧠 Smart account with session keys, transaction batching, sponsored transactions.
+- 🧠 Smart account with session keys, onramping, transaction batching, sponsored transactions.
 
 and much more...
 
@@ -41,7 +41,7 @@ For more details, see the [Wallet SDK README](./wallet-sdk/README.md).
 The Ecosystem Wallet is a complete solution for managing digital assets within the ecosystem:
 
 - `frontend`: Contains the user interface for the wallet, including pages for sending transactions, adding funds, signing messages, managing session keys, and more.
-- `backend`: Houses the server-side logic, currently focused on supporting non-custodial wallets and managing Stripe onramping sessions.
+- `backend`: Houses the server-side logic, currently focused on supporting non-custodial wallets and providing onramping sessions.
 
 For more information, refer to the [Wallet UI README](./wallet-ui/README.md).
 

@@ -8,7 +8,7 @@ export type AddFundsData = {
 }
 
 export function useAddFunds(): [
-  () => void,
+  (closeFrame: boolean) => void,
   AddFundsData | undefined,
   boolean,
   BaseError | null
@@ -17,7 +17,7 @@ export function useAddFunds(): [
   const [addFundsData, setAddFundsData] = useState<AddFundsData | undefined>();
   const [addFundsError, setAddFundsError] = useState<BaseError | null>(null);
 
-  const addFunds = useCallback(async () => {
+  const addFunds = useCallback(async (closeFrame: boolean=true) => {
     setIsAddingFunds(true);
     setAddFundsError(null);
     setAddFundsData({
@@ -27,7 +27,7 @@ export function useAddFunds(): [
 
     try {
       // Toggle the onramp UI
-      let result = await ecosystemWalletInstance.addFunds("toggle");
+      let result = await ecosystemWalletInstance.addFunds("toggle", closeFrame);
       if (!result) throw new Error('Failed to get data from onramp');
       let { onrampUrl, transactionHash } = result;
 
@@ -37,7 +37,7 @@ export function useAddFunds(): [
         window.open(onrampUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes,noopener=true,noreferrer=true');
         
         // Wait for balance update
-        result = await ecosystemWalletInstance.addFunds("watch");
+        result = await ecosystemWalletInstance.addFunds("watch", closeFrame);
         if (!result) throw new Error('Failed to get transaction hash');
         ({ onrampUrl, transactionHash } = result);
 

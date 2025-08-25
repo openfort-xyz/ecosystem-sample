@@ -31,7 +31,7 @@ and more ...
 
 When using [Openfort](https://www.openfort.io/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.io/docs/products/embedded-wallet/javascript/signer/recovery#automatic-recovery), a backend is required to manage encryption sessions.
 
-Also, for the Stripe [fiat-to-crypto onramp](https://docs.stripe.com/crypto/onramp/standalone-onramp-guide#mint-session-redirect-url) capability, a backend is required. It must implement an endpoint to create a new onramp session for every user visit. Optionally, a [webhook](https://docs.stripe.com/webhooks) can be added to keep the frontend reactive to session status changes. For example, when a user completes the purchase of the cryptocurrencies.
+For the onramp functionality, such as using [Stripe](https://docs.stripe.com/crypto/onramp/standalone-onramp-guide#mint-session-redirect-url), a backend is required. It must implement an endpoint to create a new onramp session for each user visit.
 
 ## Getting Started
 
@@ -54,9 +54,7 @@ SHIELD_PUBLIC_KEY=
 SHIELD_SECRET_KEY=
 ENCRYPTION_SHARE=
 STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
 PORT=
-WEBSOCKET_PORT= 
 ```
 
 ### Installation
@@ -86,8 +84,3 @@ yarn start
 cd backend
 yarn dev
 ```
-
-> [!IMPORTANT]  
-> If the backend uses a webhook to manage the Stripe onramp events, it must be callable from the Stripe servers. Use tools like `ngrok` to expose a `POST` endpoint in the backend. However, **do not expose the webhook itself**, there's an example at `usage-examples/wagmi-nextjs`.
->
->  You can also trigger events for testing purposes from the Stripe CLI. Either way, you will need to set up a listener and project keys, get more detalis about this in the [Stripe documentation](https://docs.stripe.com/webhooks). 
