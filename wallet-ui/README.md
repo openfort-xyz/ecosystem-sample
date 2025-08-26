@@ -31,7 +31,7 @@ and more ...
 
 When using [Openfort](https://www.openfort.io/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.io/docs/products/embedded-wallet/javascript/signer/recovery#automatic-recovery), a backend is required to manage encryption sessions.
 
-For the onramp functionality, such as using [Stripe](https://docs.stripe.com/crypto/onramp/standalone-onramp-guide#mint-session-redirect-url), a backend is required. It must implement an endpoint to create a new onramp session for each user visit.
+For the onramp functionality, such as using [Stripe](https://docs.stripe.com/crypto/onramp/standalone-onramp-guide#mint-session-redirect-url) or [Coinbase](https://docs.cdp.coinbase.com/onramp-&-offramp/onramp-apis/onramp-overview), a backend is required. It must implement an endpoint to create a new onramp session for each user visit and another one to list all the implemented providers.
 
 ## Getting Started
 
@@ -54,6 +54,8 @@ SHIELD_PUBLIC_KEY=
 SHIELD_SECRET_KEY=
 ENCRYPTION_SHARE=
 STRIPE_SECRET_KEY=
+COINBASE_KEY_ID=
+COINBASE_KEY_SECRET=
 PORT=
 ```
 

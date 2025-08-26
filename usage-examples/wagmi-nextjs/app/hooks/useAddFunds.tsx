@@ -37,6 +37,7 @@ export function useAddFunds(): [
         window.open(onrampUrl, '_blank', 'width=450,height=600,scrollbars=yes,resizable=yes,noopener=true,noreferrer=true');
         
         // Wait for balance update
+        setAddFundsError(null);
         result = await ecosystemWalletInstance.addFunds("watch", closeFrame);
         if (!result) throw new Error('Failed to get transaction hash');
         ({ onrampUrl, transactionHash } = result);
