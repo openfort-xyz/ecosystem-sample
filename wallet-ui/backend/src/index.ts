@@ -27,20 +27,66 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/onramp-providers", async (req, res) => {
-    res.json({
-        providers: [
-            {
-                name: 'coinbase',
-                logo_url: 'https://cdn.iconscout.com/icon/free/png-256/free-coinbase-logo-icon-svg-png-download-7651204.png',
-                display_name: 'Coinbase'
+    const providers = [
+        {
+            name: 'coinbase',
+            logo_url: 'https://cdn.iconscout.com/icon/free/png-256/free-coinbase-logo-icon-svg-png-download-7651204.png',
+            display_name: 'Coinbase'
+        },
+        {
+            name: 'stripe',
+            logo_url: 'https://cdn.iconscout.com/icon/free/png-256/free-stripe-logo-icon-svg-png-download-498440.png',
+            display_name: 'Stripe'
+        }
+    ];
+
+    let coinbaseQuote = null;
+    let stripeQuote = null;
+
+    // Fetch Coinbase quote
+    try {
+        const coinbaseResponse = await fetch("https://api.coinbase.com/v2/prices/ETH-USD/buy");
+        if (coinbaseResponse.ok) {
+            const coinbaseData = await coinbaseResponse.json();
+            coinbaseQuote = {
+                price: `$${(Number((coinbaseData as any).data.amount) * 0.01).toFixed(2)}`,
+                amount: "0.01 ETH"
+            };
+        }
+    } catch (error) {
+        console.error("Error fetching Coinbase quote:", error);
+    }
+
+    // Fetch Stripe quote
+    try {
+        const stripeResponse = await fetch("https://api.stripe.com/v1/crypto/onramp/quotes", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${process.env.STRIPE_SECRET_KEY}`
             },
-            {
-                name: 'stripe',
-                logo_url: 'https://cdn.iconscout.com/icon/free/png-256/free-stripe-logo-icon-svg-png-download-498440.png',
-                display_name: 'Stripe'
+        });
+        if (stripeResponse.ok) {
+            const stripeData = await stripeResponse.json();
+            const ethQuote = (stripeData as any).destination_network_quotes?.ethereum?.find((q: any) => q.destination_currency === 'eth');
+            if (ethQuote) {
+                const ethPerDollar = Number(ethQuote.destination_amount) / 100;
+                const costFor001Eth = 0.01 / ethPerDollar;
+                stripeQuote = {
+                    price: `$${costFor001Eth.toFixed(2)}`,
+                    amount: "0.01 ETH"
+                };
             }
-        ],
-    });
+        }
+    } catch (error) {
+        console.error("Error fetching Stripe quote:", error);
+    }
+
+    // Add quotes to providers
+    const providersWithQuotes = providers.map(provider => ({
+        ...provider,
+        quote: provider.name === 'coinbase' ? coinbaseQuote : stripeQuote
+    }));
+    res.json({ providers: providersWithQuotes });
 });
 
 app.post("/api/create-onramp-session", async (req, res) => {
