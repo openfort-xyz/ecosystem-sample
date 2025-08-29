@@ -8,7 +8,7 @@ import { Key } from 'lucide-react';
 import { useSignMessage, useAccount } from 'wagmi';
 import { createSiweMessage } from 'viem/siwe';
 import { baseSepolia } from 'wagmi/chains';
-import { WalletActionCard } from '../WalletActionCard';
+import { SiweCard } from '../cards/SiweCard';
 
 export function SIWEAction() {
   const { address, chainId, chain } = useAccount();
@@ -34,7 +34,7 @@ export function SIWEAction() {
   if (!address) return null;
 
   return (
-    <WalletActionCard
+    <SiweCard
       title="Authentication"
       buttonText="Sign in with Ethereum"
       onClick={handleSIWE}

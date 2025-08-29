@@ -11,7 +11,7 @@ import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { erc7715Actions } from 'viem/experimental';
 import { WalletActionCard } from '../WalletActionCard';
 
-export function GrantPermissionsAction() {
+export function GrantPermissionAction() {
   const { address, chain, connector } = useAccount();
   const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [sessionError, setSessionError] = useState<BaseError | null>(null);

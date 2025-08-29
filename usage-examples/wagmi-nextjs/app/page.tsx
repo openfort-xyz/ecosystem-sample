@@ -16,7 +16,7 @@ import { SIWEAction } from "./components/wallet/actions/siwe";
 import { SendTransactionAction } from "./components/wallet/actions/SendTransaction";
 import { SignTypedDataAction } from "./components/wallet/actions/SignTypedData";
 import { PersonalSignAction } from "./components/wallet/actions/PersonalSign";
-import { GrantPermissionsAction } from "./components/wallet/actions/GrantPermissions";
+import { GrantPermissionAction } from "./components/wallet/actions/GrantPermissions";
 import { BatchTransactionsAction } from "./components/wallet/actions/BatchTransaction";
 
 const queryClient = new QueryClient();
@@ -40,51 +40,59 @@ export default function Home() {
                 <div className="w-full md:col-span-6 lg:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-4 rounded-md overflow-hidden flex flex-col m-4">
                   
                   {/* SIWE Authentication Box */}
-                  <div className="p-3 sm:p-4 md:p-6 flex flex-col bg-muted/10 rounded-lg items-center sm:items-start">
+                  <div className="relative rounded-xl bg-gray-100">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
                     <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
                       SIWE Authentication
                     </p>
-                    <SIWEAction />
+                  </div>
+                    <div className="flex h-[300px] items-center justify-center">
+                      <SIWEAction />
+                    </div>
+                  </div>
+
+                  <div className="relative rounded-xl bg-gray-100">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
+                    <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
+                      Swaps
+                    </p>
+                  </div>
+                    <div className="flex h-[300px] items-center justify-center">
+                      <SendTransactionAction />
+                    </div>
+                  </div>
+
+                  <div className="relative rounded-xl bg-gray-100">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
+                    <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
+                      Checkout
+                    </p>
+                  </div>
+                    <div className="flex h-[300px] items-center justify-center">
+                      <BatchTransactionsAction />
+                    </div>
                   </div>
                   
-                  {/* Send Transaction Box */}
-                  <div className="p-3 sm:p-4 md:p-6 flex flex-col bg-muted/10 rounded-lg items-center sm:items-start">
+                  <div className="relative rounded-xl bg-gray-100">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
                     <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
-                      Send Transaction
+                      Micropayments
                     </p>
-                    <SendTransactionAction />
+                  </div>
+                    <div className="flex h-[300px] items-center justify-center">
+                      <SendTransactionAction />
+                    </div>
                   </div>
 
-                  {/* Sign Typed Data Box */}
-                  <div className="p-3 sm:p-4 md:p-6 flex flex-col bg-muted/10 rounded-lg items-center sm:items-start">
+                  <div className="relative rounded-xl bg-gray-100">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
                     <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
-                      Sign Typed Data
+                      Subscriptions 
                     </p>
-                    <SignTypedDataAction />
                   </div>
-
-                  {/* Personal Sign Box */}
-                  <div className="p-3 sm:p-4 md:p-6 flex flex-col bg-muted/10 rounded-lg items-center sm:items-start">
-                    <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
-                      Personal Sign
-                    </p>
-                    <PersonalSignAction />
-                  </div>
-
-                  {/* Grant Permissions Box */}
-                  <div className="p-3 sm:p-4 md:p-6 flex flex-col bg-muted/10 rounded-lg items-center sm:items-start">
-                    <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
-                      Grant Permissions
-                    </p>
-                    <GrantPermissionsAction />
-                  </div>
-
-                  {/* Batch Transactions Box */}
-                  <div className="p-3 sm:p-4 md:p-6 flex flex-col bg-muted/10 rounded-lg items-center sm:items-start">
-                    <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
-                      Batch Transactions
-                    </p>
-                    <BatchTransactionsAction />
+                    <div className="flex h-[300px] items-center justify-center">
+                      <GrantPermissionAction />
+                    </div>
                   </div>
                   
                 </div>
