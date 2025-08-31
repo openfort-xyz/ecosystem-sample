@@ -299,7 +299,7 @@ export function EarnAction() {
       }`}
       title={
         accountStatus === 'disconnected'
-          ? 'Connect your wallet to start earning'
+          ? 'Sign in to start earning'
           : ''
       }
     >
@@ -321,12 +321,12 @@ export function EarnAction() {
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <span className="text-sm font-bold text-blue-600">M</span>
               </div>
-              <h3 className="font-semibold text-gray-900">Morpho</h3>
+              <p className="font-semibold text-sm text-gray-900">Morpho</p>
             </div>
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-500">APY</p>
-            <p className="text-lg font-bold text-green-600">{MORPHO_CONFIG.apy}%</p>
+            <p className="text-sm font-bold text-green-600">{MORPHO_CONFIG.apy}%</p>
           </div>
         </div>
 
@@ -375,7 +375,7 @@ export function EarnAction() {
             }
           `}
         >
-          {accountStatus === 'disconnected' ? 'Connect Wallet' : balance > 0 ? 'Add more' : 'Start earning'}
+          {accountStatus === 'disconnected' ? 'Sign in' : balance > 0 ? 'Add more' : 'Start earning'}
         </button>
         
         {balance > 0 && (
