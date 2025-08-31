@@ -76,7 +76,7 @@ export function SIWEAction() {
   // Verified success state
   if (isVerified) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-[320px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@ export function SIWEAction() {
               onClick={() => {
                 navigator.clipboard.writeText(signature);
               }}
-              className="px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+              className="px-3 py-2 text-sm text-blue-500 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
             >
               Copy signature
             </button>
@@ -121,7 +121,7 @@ export function SIWEAction() {
   // Verifying signature state
   if (isVerifying) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-[320px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24">
@@ -153,7 +153,7 @@ export function SIWEAction() {
   // Signature obtained, waiting for verification
   if (signature && !isVerifying) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-[320px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,7 +178,7 @@ export function SIWEAction() {
   if (error || verificationError) {
     const displayError = verificationError || error;
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-red-200 p-4 w-[320px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-start gap-3 mb-3">
           <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +207,7 @@ export function SIWEAction() {
   // Main authentication card
   return (
     <div 
-      className={`bg-white rounded-lg border w-[320px] border-gray-200 p-4 ${
+      className={`bg-white rounded-lg p-4 m-4 w-full ${
         accountStatus === 'disconnected' ? 'opacity-50' : ''
       }`}
       title={
@@ -236,16 +236,13 @@ export function SIWEAction() {
           transition-all duration-200 flex items-center justify-center gap-2
           ${isPending || accountStatus === 'disconnected'
             ? 'bg-gray-400 cursor-not-allowed' 
-            : 'bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98]'
+            : 'bg-blue-600 hover:bg-blue-700 active:scale-[0.98]'
           }
         `}
       >
         {accountStatus === 'disconnected' ? (
           <>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-            </svg>
-            Connect Wallet
+            Sign in
           </>
         ) : isPending ? (
           <>
@@ -276,14 +273,6 @@ export function SIWEAction() {
           </>
         )}
       </button>
-
-      {/* Info text */}
-      <p className="text-xs text-gray-500 text-center mt-3">
-        {accountStatus === 'disconnected' 
-          ? 'Connect your wallet to authenticate'
-          : 'Sign a message to prove wallet ownership'
-        }
-      </p>
     </div>
   );
 }

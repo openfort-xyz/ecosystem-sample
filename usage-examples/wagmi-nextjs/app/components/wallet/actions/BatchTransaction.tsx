@@ -50,7 +50,7 @@ export function BatchTransactionsAction() {
   // Confirmed success state
   if (isConfirmed) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-[300px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,13 +67,13 @@ export function BatchTransactionsAction() {
             href={`${chain?.blockExplorers?.default.url}/tx/${bundleIdentifier?.id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 text-center px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+            className="flex-1 text-center px-3 py-2 text-xs text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
           >
             View transaction →
           </a>
           <button
             onClick={() => reset()}
-            className="px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            className="px-3 py-2 text-xs text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
           >
             Buy another
           </button>
@@ -85,7 +85,7 @@ export function BatchTransactionsAction() {
   // Confirming state
   if (isConfirming) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-[300px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ export function BatchTransactionsAction() {
           </div>
           <div className="flex-1">
             <p className="font-medium text-gray-900">Waiting for confirmation...</p>
-            <p className="text-sm text-gray-600">Please wait while your transaction is being confirmed</p>
+            <p className="text-xs text-gray-600">Please wait while your transaction is being confirmed</p>
           </div>
         </div>
         {bundleIdentifier?.id && (
@@ -125,7 +125,7 @@ export function BatchTransactionsAction() {
   if (error || receiptError) {
     const displayError = error || receiptError;
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-red-200 p-4 w-[300px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-start gap-3 mb-3">
           <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,14 +134,14 @@ export function BatchTransactionsAction() {
           </div>
           <div className="flex-1">
             <p className="font-medium text-gray-900">Transaction failed</p>
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-xs text-red-600 mt-1">
               {(displayError as BaseError)?.shortMessage || displayError?.message || 'An error occurred'}
             </p>
           </div>
         </div>
         <button
           onClick={() => reset()}
-          className="w-full px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          className="w-full px-3 py-2 text-xs text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
         >
           Try again
         </button>
@@ -152,7 +152,7 @@ export function BatchTransactionsAction() {
   // Transaction sent, waiting for receipt
   if (bundleIdentifier && !isConfirming) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-[300px]">
+      <div className="bg-white rounded-lg p-4 m-4 w-full">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,7 +161,7 @@ export function BatchTransactionsAction() {
           </div>
           <div className="flex-1">
             <p className="font-medium text-gray-900">Transaction sent!</p>
-            <p className="text-sm text-gray-600">Waiting for blockchain confirmation...</p>
+            <p className="text-xs text-gray-600">Waiting for blockchain confirmation...</p>
           </div>
         </div>
       </div>
@@ -171,12 +171,12 @@ export function BatchTransactionsAction() {
   // Main checkout card
   return (
     <div 
-      className={`bg-white rounded-lg border w-[300px] border-gray-200 p-4 ${
+      className={`bg-white rounded-lg  m-4 w-full p-4 ${
         accountStatus === 'disconnected' ? 'opacity-50' : ''
       }`}
       title={
         accountStatus === 'disconnected'
-          ? 'Connect your wallet to buy the Digital Clock'
+          ? 'Sign in to buy'
           : ''
       }
     >
@@ -193,7 +193,7 @@ export function BatchTransactionsAction() {
           <h3 className="font-semibold text-gray-900 text-sm mb-1">
             Digital Clock
           </h3>
-          <p className="text-lg font-bold text-gray-900">
+          <p className="text-normal font-bold text-gray-900">
             1 USD
           </p>
         </div>
@@ -204,7 +204,7 @@ export function BatchTransactionsAction() {
         onClick={handleSendBatch}
         disabled={isPending || accountStatus === 'disconnected'}
         className={`
-          w-full px-6 py-2 rounded-lg font-medium text-sm text-white
+          w-full px-6 py-2 rounded-lg font-medium text-xs text-white
           transition-all duration-200 
           ${isPending || accountStatus === 'disconnected'
             ? 'bg-gray-400 cursor-not-allowed' 
@@ -213,7 +213,7 @@ export function BatchTransactionsAction() {
         `}
       >
         {accountStatus === 'disconnected' ? (
-          'Connect Wallet'
+          'Sign in'
         ) : isPending ? (
           <span className="flex items-center justify-center gap-2">
             <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
@@ -238,13 +238,6 @@ export function BatchTransactionsAction() {
           'Buy Now'
         )}
       </button>
-
-      {/* Wallet connection hint */}
-      {accountStatus === 'disconnected' && (
-        <p className="text-xs text-gray-500 text-center mt-2">
-          Connect your wallet to purchase
-        </p>
-      )}
     </div>
   );
 }

@@ -13,11 +13,12 @@ import { ConnectKitProvider } from "connectkit";
 
 // Import the action components
 import { SIWEAction } from "./components/wallet/actions/siwe";
-import { SendTransactionAction } from "./components/wallet/actions/SendTransaction";
-import { SignTypedDataAction } from "./components/wallet/actions/SignTypedData";
-import { PersonalSignAction } from "./components/wallet/actions/PersonalSign";
+import { TradingSwapAction } from "./components/wallet/actions/SendTransaction";
+import { MicroTippingAction } from "./components/wallet/actions/MicroTipping";
 import { GrantPermissionAction } from "./components/wallet/actions/GrantPermissions";
 import { BatchTransactionsAction } from "./components/wallet/actions/BatchTransaction";
+import { EarnAction } from "./components/wallet/actions/EarnTransaction";
+
 
 const queryClient = new QueryClient();
 
@@ -31,17 +32,17 @@ export default function Home() {
               <div className="max-w-7xl mx-auto gap-4 sm:gap-6 md:gap-8">
                 <div className="w-full md:col-span-4 flex flex-col space-y-4 sm:space-y-6">
                   <Header />
-                  <div className="space-y-4 sm:space-y-6">
+                  <div className="">
                     <WalletConnect />
                   </div>
                 </div>
                 
                 {/* Grid of action boxes - buttons appear when wallet is connected */}
-                <div className="w-full md:col-span-6 lg:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-4 rounded-md overflow-hidden flex flex-col m-4">
+                <div className="w-full md:col-span-6 lg:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-4 rounded-md overflow-hidden flex flex-col m-6">
                   
                   {/* SIWE Authentication Box */}
                   <div className="relative rounded-xl bg-gray-100">
-                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
+                  <div className="absolute w-full top-0 right-0 left-0 flex justify-between p-4">
                     <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
                       SIWE Authentication
                     </p>
@@ -58,7 +59,7 @@ export default function Home() {
                     </p>
                   </div>
                     <div className="flex h-[300px] items-center justify-center">
-                      <SendTransactionAction />
+                      <TradingSwapAction />
                     </div>
                   </div>
 
@@ -80,7 +81,7 @@ export default function Home() {
                     </p>
                   </div>
                     <div className="flex h-[300px] items-center justify-center">
-                      <SendTransactionAction />
+                      <MicroTippingAction />
                     </div>
                   </div>
 
@@ -92,6 +93,18 @@ export default function Home() {
                   </div>
                     <div className="flex h-[300px] items-center justify-center">
                       <GrantPermissionAction />
+                    </div>
+                  </div>
+
+
+                  <div className="relative rounded-xl bg-gray-100">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between p-4">
+                    <p className="text-xs sm:text-sm text-muted/30 font-medium px-2 sm:px-2 py-1 sm:py-1">
+                      Earn 
+                    </p>
+                  </div>
+                    <div className="flex h-[300px] items-center justify-center">
+                      <EarnAction />
                     </div>
                   </div>
                   
