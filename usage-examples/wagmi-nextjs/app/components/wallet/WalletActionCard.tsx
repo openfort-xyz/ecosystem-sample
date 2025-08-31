@@ -3,12 +3,10 @@
 import { BaseError } from 'wagmi';
 import { Button } from '../ui/button';
 import { TransactionStatus } from "./TransactionStatus";
-import { LucideIcon } from 'lucide-react';
 import { Input } from '../ui/input';
 import { useState } from 'react';
 
 interface WalletActionCardProps {
-  icon: LucideIcon;
   title: string;
   buttonText: string;
   blockExplorerUrl: string;
@@ -25,7 +23,6 @@ interface WalletActionCardProps {
 }
 
 export function WalletActionCard({
-  icon: Icon,
   buttonText,
   isLoading,
   blockExplorerUrl,
@@ -59,9 +56,8 @@ export function WalletActionCard({
       <Button
         onClick={() => onClick(inputValue)}
         disabled={isLoading}
-        className="w-full bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600 hover:from-blue-500 hover:via-blue-600 hover:to-blue-700 active:from-blue-600 active:via-blue-700 active:to-blue-800 text-white rounded-lg shadow-lg border border-blue-400 hover:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-medium py-5 transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2"
+        className="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600 hover:from-blue-500 hover:via-blue-600 hover:to-blue-700 active:from-blue-600 active:via-blue-700 active:to-blue-800 text-white rounded-lg shadow-lg border border-blue-400 hover:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-medium py-5 transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2"
       >
-        <Icon className="w-4 h-4" />
         {isLoading ? 'Processing...' : buttonText}
       </Button>
       
@@ -80,7 +76,7 @@ export function WalletActionCard({
       )}
       
       {payload && (
-        <div className="text-nowrap overflow-x-auto text-xs text-gray-600 p-2 bg-blue-50 rounded-lg border border-blue-100">
+        <div className="max-w-full truncate overflow-hidden text-ellipsis whitespace-nowrap text-xs text-gray-600 p-2 bg-blue-50 rounded-lg border border-blue-100">
           {payload}
         </div>
       )}
