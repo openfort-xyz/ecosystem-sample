@@ -2237,9 +2237,9 @@
     zustand "^5.0.1"
 
 "@openfort/openfort-js@^0.10.7":
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/@openfort/openfort-js/-/openfort-js-0.10.7.tgz#d2046eccc66c3480dcb650b9cf8b566dfa4a9263"
-  integrity sha512-yZivVkj632qvijlhFrvaYYjR6YfFNkzydfUDOCH6obzOTHB37gODa7tucCM3qyDkxPgnBpUXZaSSJ/ng0ppnPw==
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/@openfort/openfort-js/-/openfort-js-0.10.8.tgz#f7c382cc120f71d52cb4795a6047f6c5f392608d"
+  integrity sha512-zyuTAoLrn8o/sXdpPXWy2snLn6+AIJo/Fm/2XMuPZc6GOAoCWqTY84PYQ2KtbiNsUMsl1QD0rc0b3txEZ8ZEIA==
   dependencies:
     "@ethersproject/abi" "^5.8.0"
     "@ethersproject/bytes" "^5.8.0"

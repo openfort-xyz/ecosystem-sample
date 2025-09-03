@@ -1,5 +1,4 @@
-# Use an official Node runtime as the base image
-FROM node:20.11-slim
+FROM node:20.19-slim
 
 # Set the working directory in the container
 WORKDIR /usr/src/app

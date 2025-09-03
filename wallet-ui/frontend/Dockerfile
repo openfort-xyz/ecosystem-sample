@@ -1,4 +1,13 @@
-FROM node:20-alpine AS builder
+FROM node:20.19-alpine AS builder
+
+RUN apk add --no-cache \
+    openssl \
+    python3 \
+    make \
+    gcc \
+    g++ \
+    libc-dev \
+    jq
 
 WORKDIR /app
 COPY . .
