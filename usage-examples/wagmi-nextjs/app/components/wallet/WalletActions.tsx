@@ -1,4 +1,4 @@
-import { Send, MessageSquare, Key, Shield, Boxes } from "lucide-react";
+import { Send, MessageSquare, Key, Shield, Boxes, HandCoins } from "lucide-react";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
@@ -7,29 +7,42 @@ import {
   useAccount,
 } from 'wagmi';
 import { useWriteContracts } from 'wagmi/experimental'
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { BaseError, createWalletClient, custom, parseAbi } from 'viem';
 import { erc20Abi } from "@/app/utils/abi";
 import { baseSepolia } from 'wagmi/chains';
 import { erc7715Actions } from "viem/experimental";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { createSiweMessage } from 'viem/siwe';
+import { useAddFunds } from '@/app/hooks/useAddFunds';
+
 
 export function useWalletActions() {
   const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [sessionError, setSessionError] = useState<BaseError | null>(null);
   const { connector, chainId, address, chain } = useAccount();
+  const [needsRetry, setNeedsRetry] = useState(false);
+  const [retryAttempts, setRetryAttempts] = useState(0);
+  const [retryContracts, setRetryContracts] = useState<any[]>([]);
+  const maxAttempts = 3;
+
   // Transaction hooks
-  const { data: hash, writeContract, isPending, error  } = useWriteContract();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const [addFunds, addFundsData, isAddingFunds, addFundsError] = useAddFunds();
 
   // Signature hooks
   const { signTypedData, data: typedSignature, isPending: isSigningTyped, error: typedError } = useSignTypedData();
   const { signMessage, data: personalSignature, isPending: isSigningPersonal, error: personalError } = useSignMessage();
+
   // Batched transaction hooks
-  const { data: bundleIdentifier, isPending: callsPending, error: callsError, writeContracts } = useWriteContracts();
+  const { data: callsData, isPending: callsPending, error: callsError, writeContracts, writeContractsAsync } = useWriteContracts();
 
   // Transaction handlers
+  const handleAddFunds = useCallback(() => {
+    addFunds(true);
+  }, [addFundsData, isAddingFunds, addFundsError])
+
   const handleExampleTx = useCallback(() => {
     writeContract({
       abi: erc20Abi,
@@ -80,45 +93,56 @@ export function useWalletActions() {
       nonce: 'deadbeef',
     })
     signMessage({ message: message });
-  },[signMessage, chainId, chainId])
+  }, [signMessage, chainId, chainId])
 
   const handlePersonalSign = useCallback(() => {
     signMessage({ message: 'Hello World' });
   }, [signMessage]);
 
-  const handleSendCalls = useCallback(() => {
-    writeContracts({
-      contracts: [
-        {
-          address: '0xdc2de190a921d846b35eb92d195c9c3d9c08d1c2',
-          abi: parseAbi(['function mint(uint256)']),
-          functionName: 'mint',
-          args: [1000000000000000000],
-        },
-        {
-          address: '0xdc2de190a921d846b35eb92d195c9c3d9c08d1c2',
-          abi: parseAbi(['function transfer(address,uint256) returns (bool)']),
-          functionName: 'transfer',
-          args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B',10000000000000000],
-        },
-      ],
-    });
-  }, [writeContracts]);
+  const handleSendCalls = useCallback(async () => {
+    const contracts = [
+      {
+        address: '0xdc2de190a921d846b35eb92d195c9c3d9c08d1c2',
+        abi: parseAbi(['function transfer(address,uint256) returns (bool)']),
+        functionName: 'transfer',
+        args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B', 1000000000000000000],
+      },
+      {
+        address: '0xdc2de190a921d846b35eb92d195c9c3d9c08d1c2',
+        abi: parseAbi(['function transfer(address,uint256) returns (bool)']),
+        functionName: 'transfer',
+        args: ['0xd2135CfB216b74109775236E36d4b433F1DF507B', 1000000000000000000],
+      },
+    ]
+    setRetryAttempts(0);
+    setRetryContracts(contracts);
 
-  const handleGrantPermissions = useCallback(async() => {
+    try {
+      const txResult = await writeContractsAsync({ contracts: contracts as any });
+      if (txResult.id === 'INSUFFICIENT_FUNDS') {
+        setNeedsRetry(true);
+        setRetryAttempts(1)
+        addFunds(false);
+      }
+    } catch (e) {
+      console.log('Error caught:', e);
+    }
+  }, [writeContractsAsync, addFunds]);
+
+  const handleGrantPermissions = useCallback(async () => {
     const provider = await connector?.getProvider()
 
     const privateKey = generatePrivateKey();
     const accountSession = privateKeyToAccount(privateKey).address;
     const walletClient = createWalletClient({
-      chain: chain, 
+      chain: chain,
       transport: custom(provider as any),
-    }).extend(erc7715Actions()) 
-    try{
+    }).extend(erc7715Actions())
+    try {
       await walletClient.grantPermissions({
-        signer:{
+        signer: {
           type: "key",
-          data:{
+          data: {
             id: accountSession
           }
         },
@@ -132,7 +156,7 @@ export function useWalletActions() {
             },
             policies: [
               {
-                type: 
+                type:
                 {
                   custom: "usage-limit"
                 },
@@ -149,10 +173,51 @@ export function useWalletActions() {
       const error = e as BaseError
       setSessionError(error)
     }
-  },[connector, chain])
+  }, [connector, chain])
+
+  // Retry logic after adding funds
+  useEffect(() => {
+    if (needsRetry && !isAddingFunds) {
+      const handleRetry = async () => {
+        if (addFundsError) {
+          setNeedsRetry(false);
+          return;
+        }
+        if (addFundsData) {
+          try {
+            const txResult = await writeContractsAsync({ contracts: retryContracts });
+            if (txResult.id === 'INSUFFICIENT_FUNDS') {
+              if (retryAttempts >= maxAttempts) {
+                setNeedsRetry(false);
+                return;
+              }
+              setRetryAttempts(prev => prev + 1);
+              addFunds(false);
+            } else {
+              setNeedsRetry(false);
+            }
+          } catch (e) {
+            setNeedsRetry(false);
+          }
+        }
+      };
+      handleRetry();
+    }
+  }, [needsRetry, isAddingFunds, addFundsError, addFundsData, retryAttempts, retryContracts, writeContractsAsync, addFunds]);
 
 
   const actions = [
+    {
+      icon: HandCoins,
+      title: "wallet_addFunds",
+      buttonText: "Manage Funds",
+      onClick: handleAddFunds,
+      blockExplorerUrl: chain?.blockExplorers?.default.url!,
+      isLoading: isAddingFunds,
+      error: addFundsError,
+      hash: addFundsData?.hash as `0x${string}` | undefined,
+      isConfirmed: addFundsData?.isConfirmed,
+    },
     {
       icon: Send,
       title: "eth_sendTransaction",
@@ -203,18 +268,18 @@ export function useWalletActions() {
       onClick: handleGrantPermissions,
       blockExplorerUrl: chain?.blockExplorers?.default.url!,
       isLoading: false,
-      payload: !sessionError && sessionKey? sessionKey : undefined,
+      payload: !sessionError && sessionKey ? sessionKey : undefined,
     },
     {
       icon: Boxes,
       title: "wallet_sendCalls",
-      buttonText: "Send Batch Transaction",
+      buttonText: "Send batch of 2 USDC",
       onClick: handleSendCalls,
       blockExplorerUrl: chain?.blockExplorers?.default.url!,
       isLoading: callsPending,
       error: callsError,
-      hash: bundleIdentifier?.id as `0x${string}` | undefined,
-    },
+      hash: callsData?.id === 'INSUFFICIENT_FUNDS' ? undefined : callsData?.id as `0x${string}` | undefined,
+    }
   ];
 
   return { actions };

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "../ui/button";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { useCallback, useEffect, useState } from "react";
 import { ecosystemWalletInstance } from "@/app/utils/ecosystemWallet";
 import { LogOut, Copy, Check } from "lucide-react";
@@ -19,8 +19,14 @@ export function WalletConnect() {
       policy: process.env.NEXT_PUBLIC_POLICY_ID,
     });
   }, []);
-  
-  const { address, isConnected, connector, chain } = useAccount();
+  const chainId = useChainId();
+  const { address, isConnected, connector, chain: accountChain, status } = useAccount();
+  const { switchChain } = useSwitchChain();
+  useEffect(() => {
+    if (status ==="connected" && accountChain?.id !== chainId) {
+      switchChain({chainId: chainId})
+    }
+  }, [status]);
   const { connectors, connect, error } = useConnect();
   const { disconnect } = useDisconnect();
   
@@ -121,7 +127,7 @@ export function WalletConnect() {
             className="w-full font-mono text-sm text-muted-foreground break-all px-3 py-2 rounded-lg flex justify-between items-center bg-muted/20 hover:bg-muted/30 h-auto"
           >
             <a
-            href={chain?.blockExplorers?.default.url + '/address/' + address}
+            href={accountChain?.blockExplorers?.default.url + '/address/' + address}
             target="_blank"
             rel="noopener noreferrer"
             className=" truncate text-primary hover:text-primary/80 hover:underline cursor-pointer text-sm"

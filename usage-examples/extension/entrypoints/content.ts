@@ -5,8 +5,8 @@ export default defineContentScript({
   runAt: 'document_end',
   world: 'MAIN',
   main() {
-    const rapidfire = new EcosystemWallet()
-    const provider = rapidfire.getEthereumProvider()
+    let rapidfire = new EcosystemWallet()
+    let provider = rapidfire.getEthereumProvider()
       ; (window as any).ethereum = provider
   },
 })

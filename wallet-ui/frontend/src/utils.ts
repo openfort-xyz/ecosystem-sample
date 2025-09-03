@@ -1,7 +1,8 @@
 import { Value } from 'ox'
 
 export const sum = (array: number[]) =>
-    array.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+    array.reduce((acc, curr) => acc + (isNaN(curr) ? 0 : curr), 0)
+
 
 export namespace ValueFormatter {
     const numberIntl = new Intl.NumberFormat('en-US', {
