@@ -94,9 +94,9 @@ app.post("/api/create-onramp-session", async (req, res) => {
         const { provider, address } = req.body;
 
         if (!provider || !address) {
-            return res.status(400).json({ 
-                error: 'Missing required parameters', 
-                required: ['provider', 'address'] 
+            return res.status(400).json({
+                error: 'Missing required parameters',
+                required: ['provider', 'address']
             });
         }
 
@@ -121,9 +121,9 @@ app.post("/api/create-onramp-session", async (req, res) => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                return res.status(response.status).json({ 
-                    error: 'Stripe API error', 
-                    details: errorData 
+                return res.status(response.status).json({
+                    error: 'Stripe API error',
+                    details: errorData
                 });
             }
 
@@ -147,8 +147,8 @@ app.post("/api/create-onramp-session", async (req, res) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    purchase_currency: "BTC",
-                    payment_amount: "100.00",
+                    purchase_currency: "ETH",
+                    payment_amount: "10.00",
                     payment_currency: "USD",
                     payment_method: "CARD",
                     country: "US",
@@ -158,9 +158,9 @@ app.post("/api/create-onramp-session", async (req, res) => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                return res.status(response.status).json({ 
-                    error: 'Coinbase API error', 
-                    details: errorData 
+                return res.status(response.status).json({
+                    error: 'Coinbase API error',
+                    details: errorData
                 });
             }
 
@@ -168,14 +168,14 @@ app.post("/api/create-onramp-session", async (req, res) => {
             return res.json({ redirect_url: (data as any).onramp_url });
         }
 
-        return res.status(400).json({ 
-            error: 'Invalid provider', 
-            supported: ['stripe', 'coinbase'] 
+        return res.status(400).json({
+            error: 'Invalid provider',
+            supported: ['stripe', 'coinbase']
         });
 
     } catch (error) {
         console.error('Onramp session creation error:', error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             error: 'Internal server error',
             message: 'Failed to create onramp session'
         });
