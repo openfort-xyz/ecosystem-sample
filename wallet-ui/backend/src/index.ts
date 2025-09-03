@@ -213,7 +213,7 @@ app.post("/api/protected-create-encryption-session", async (req, res) => {
             encryptionShare = process.env.ENCRYPTION_SHARE!;
         }
 
-        const openfort = new Openfort(openfortKey);
+        const openfort = new Openfort.default(openfortKey);
         await openfort.iam.verifyAuthToken(accessToken);
         const session = await openfort.registerRecoverySession(shieldPublicKey, shieldSecretKey, encryptionShare);
         res.json({ session });

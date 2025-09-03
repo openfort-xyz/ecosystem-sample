@@ -7,6 +7,6 @@ export const ecosystemWalletInstance = new EcosystemWallet({
         appName: 'Example App',
         appChainIds: [baseSepolia.id],
     },
-    testnet: false,
+    testnet: true,
     windowStrategy: 'iframe',
 });
