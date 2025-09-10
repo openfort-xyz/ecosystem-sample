@@ -14,7 +14,7 @@
     "license": "ISC",
     "description": "",
     "devDependencies": {
-        "@openfort/openfort-node": "^0.6.71",
+        "@openfort/openfort-node": "^0.6.72",
         "@coinbase/cdp-sdk": "^1.36.0",
         "stripe": "latest",
         "@types/cors": "^2.8.17",

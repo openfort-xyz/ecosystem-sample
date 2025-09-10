@@ -10,7 +10,7 @@ import { InstallInstructions } from "./components/layout/InstallInstructions";
 import { WalletStatus } from "./components/wallet/WalletStatus";
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { ConnectKitProvider } from "connectkit";
 
 
 const queryClient = new QueryClient();

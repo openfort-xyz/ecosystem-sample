@@ -53,7 +53,6 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
           backendUrl={process.env.REACT_APP_BACKEND_URL!}
         >
           <OpenfortProvider
-            thirdPartyAuthentication={false}
             debugMode={true}
             ecosystemId={process.env.REACT_APP_OPENFORT_ECOSYSTEM_ID!}
             onRedirectCallback={(appState) => {
