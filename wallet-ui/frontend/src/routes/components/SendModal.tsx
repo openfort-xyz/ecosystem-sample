@@ -154,7 +154,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.0"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             {selectedAsset && (
               <div className="absolute right-3 top-2 text-sm text-gray-500">
@@ -163,10 +163,19 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
             )}
           </div>
           {selectedAsset && (
-            <p className="mt-1 text-sm text-gray-500">
-              Balance: {Number(selectedAsset.balance) / Math.pow(10, selectedAsset.decimals)}{" "}
-              {selectedAsset.symbol}
-            </p>
+            <div className="mt-1 flex items-center justify-between text-sm text-gray-500">
+              <span>
+                Balance: {Number(selectedAsset.balance) / Math.pow(10, selectedAsset.decimals)}{" "}
+                {selectedAsset.symbol}
+              </span>
+              <button
+                type="button"
+                onClick={() => setAmount(String(Number(selectedAsset.balance) / Math.pow(10, selectedAsset.decimals)))}
+                className="px-2 py-0.5 text-xs font-medium uppercase tracking-wide rounded border border-gray-300 text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors"
+              >
+                max
+              </button>
+            </div>
           )}
         </div>
 
