@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useAccount, useBlockNumber, useChainId, useConfig } from "wagmi";
-import { ExternalLink, PersonStanding, Send, Download } from "lucide-react";
+import { ExternalLink, PersonStanding, Send, QrCode } from "lucide-react";
 import { Button, useOpenfort } from "@openfort/ecosystem-js/react";
 import { cx } from "class-variance-authority";
 import { Address, Value } from 'ox'
@@ -103,7 +103,7 @@ export function Dashboard() {
               onClick={() => setIsGetModalOpen(true)}
               className="flex-1 flex items-center justify-center gap-2"
             >
-              <Download className="size-4 mr-2" />
+              <QrCode className="size-4 mr-2" />
               Get
             </Button>
             <Button
