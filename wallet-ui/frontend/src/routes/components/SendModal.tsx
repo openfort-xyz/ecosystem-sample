@@ -131,6 +131,14 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
   const nativeEthBalance = nativeEthAsset ? Number(nativeEthAsset.balance) / Math.pow(10, nativeEthAsset.decimals) : 0;
   const hasNoGas = nativeEthBalance === 0;
 
+  // Calculate minimum gas cost for native ETH
+  const isNativeEth = selectedToken === "0x0000000000000000000000000000000000000000";
+  const fallbackGasPrice = BigInt(50000000000); // 50 gwei
+  const currentGasPrice = gasPrice || fallbackGasPrice;
+  const estimatedGasCost = (estimatedGasLimit * currentGasPrice * BigInt(110)) / BigInt(100);
+  const minGasCostInEth = Number(formatEther(estimatedGasCost));
+  const hasInsufficientBalance = isNativeEth && nativeEthBalance > 0 && nativeEthBalance < minGasCostInEth;
+
   const isValidAddress = recipient && Address.validate(recipient);
 
   return (
@@ -231,6 +239,20 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
           </div>
         )}
 
+        {hasInsufficientBalance && (
+          <div className="rounded-lg bg-yellow-50 p-3 text-sm text-yellow-800 border border-yellow-200">
+            <div className="flex items-start gap-2">
+              <span className="text-yellow-600">⚠️</span>
+              <div>
+                <p className="font-medium">Balance too low</p>
+                <p className="mt-1 text-xs">
+                  Your ETH balance ({nativeEthBalance.toFixed(8)} ETH) is less than the estimated gas cost ({minGasCostInEth.toFixed(8)} ETH). You cannot send any ETH.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 max-h-40 overflow-y-auto">
             Error: {error.message}
@@ -259,7 +281,8 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
               !isValidAddress ||
               isPending ||
               isConfirming ||
-              hasNoGas
+              hasNoGas ||
+              hasInsufficientBalance
             }
             className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
