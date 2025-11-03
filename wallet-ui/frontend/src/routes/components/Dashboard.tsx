@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useAccount, useBlockNumber, useChainId, useConfig } from "wagmi";
-import { ExternalLink, PersonStanding } from "lucide-react";
+import { ExternalLink, PersonStanding, Send, Download } from "lucide-react";
 import { Button, useOpenfort } from "@openfort/ecosystem-js/react";
 import { cx } from "class-variance-authority";
 import { Address, Value } from 'ox'
@@ -13,6 +13,8 @@ import { sum, ValueFormatter, DateFormatter, StringFormatter } from "../../utils
 import { ShowMore } from "./ShowMore";
 import { TruncatedAddress } from "./TruncatedAddress";
 import { LogoMark } from "./LogoMark";
+import { SendModal } from "./SendModal";
+import { GetModal } from "./GetModal";
 
 export function Dashboard() {
   const { logout } = useOpenfort();
@@ -33,6 +35,9 @@ export function Dashboard() {
   const { data: blockNumber } = useBlockNumber({
     watch: { enabled: account.status === "connected", pollingInterval: 800 },
   });
+
+  const [isSendModalOpen, setIsSendModalOpen] = React.useState(false);
+  const [isGetModalOpen, setIsGetModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     refetchSwapAssets();
@@ -91,6 +96,24 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="h-6" />
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setIsGetModalOpen(true)}
+              className="flex-1 flex items-center justify-center gap-2"
+            >
+              <Download className="size-4 mr-2" />
+              Get
+            </Button>
+            <Button
+              onClick={() => setIsSendModalOpen(true)}
+              variant="primary"
+              className="flex-1 flex items-center justify-center gap-2"
+            >
+              <Send className="size-4 mr-2" />
+              Send
+            </Button>
           </div>
           <div className="h-6" />
           <hr className="border-gray-200" />
@@ -235,6 +258,9 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+
+      <SendModal isOpen={isSendModalOpen} onClose={() => setIsSendModalOpen(false)} />
+      <GetModal isOpen={isGetModalOpen} onClose={() => setIsGetModalOpen(false)} />
     </div>
   );
 }
