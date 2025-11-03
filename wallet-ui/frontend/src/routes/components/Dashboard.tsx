@@ -114,7 +114,7 @@ export function Dashboard() {
               className="flex-1 flex items-center justify-center gap-2"
             >
               <QrCode className="size-4 mr-2" />
-              Get
+              Deposit
             </Button>
             <Button
               onClick={() => setIsSendModalOpen(true)}
