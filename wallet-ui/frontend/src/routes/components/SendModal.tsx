@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useSendTransaction, useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther, parseUnits, Address as ViemAddress } from "viem";
+import { useSendTransaction, useAccount, useWaitForTransactionReceipt, useEstimateGas, useGasPrice } from "wagmi";
+import { parseEther, parseUnits, Address as ViemAddress, formatEther } from "viem";
 import { Address } from "ox";
 import { Modal } from "./Modal";
 import { useSwapAssets } from "../../hooks/useSwapAssets";
@@ -27,6 +27,10 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
   const [amount, setAmount] = React.useState("");
   const [selectedToken, setSelectedToken] = React.useState<string>("");
 
+  // Gas estimation for native ETH transfers
+  const { data: gasPrice } = useGasPrice();
+  const estimatedGasLimit = BigInt(21000); // Standard ETH transfer gas limit
+
   React.useEffect(() => {
     if (assets && assets.length > 0 && !selectedToken) {
       // Default to ETH (native token, address 0x0000...)
@@ -52,6 +56,33 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
       }, 2000);
     }
   }, [isConfirmed, onClose]);
+
+  const handleMaxClick = () => {
+    if (!selectedAsset) return;
+
+    const balanceInToken = Number(selectedAsset.balance) / Math.pow(10, selectedAsset.decimals);
+
+    // If sending native ETH, subtract estimated gas fees
+    const isNativeEth = selectedToken === "0x0000000000000000000000000000000000000000";
+    
+    if (isNativeEth) {
+      // Use real gas price or fallback to a conservative estimate (50 gwei)
+      const fallbackGasPrice = BigInt(50000000000); // 50 gwei in wei
+      const currentGasPrice = gasPrice || fallbackGasPrice;
+      
+      // Calculate estimated gas cost: gasLimit * gasPrice
+      // Add 10% safety margin to account for gas price fluctuations
+      const estimatedGasCost = (estimatedGasLimit * currentGasPrice * BigInt(110)) / BigInt(100);
+      const gasCostInEth = Number(formatEther(estimatedGasCost));
+      
+      // Subtract gas cost from balance, ensuring we don't go negative
+      const maxSendable = Math.max(0, balanceInToken - gasCostInEth);
+      setAmount(String(maxSendable));
+    } else {
+      // For ERC20 tokens, use full balance
+      setAmount(String(balanceInToken));
+    }
+  };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -177,7 +208,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
               </span>
               <button
                 type="button"
-                onClick={() => setAmount(String(Number(selectedAsset.balance) / Math.pow(10, selectedAsset.decimals)))}
+                onClick={handleMaxClick}
                 className="px-2 py-0.5 text-xs font-medium uppercase tracking-wide rounded border border-gray-300 text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors"
               >
                 max
