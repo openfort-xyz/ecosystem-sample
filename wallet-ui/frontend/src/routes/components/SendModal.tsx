@@ -18,7 +18,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
   const chainId = useChainId();
   const chain = getChainConfig(chainId);
   const { data: assets } = useSwapAssets({ chainId });
-  const { sendTransaction, data: hash, isPending, error } = useSendTransaction();
+  const { sendTransaction, data: hash, isPending, error, reset } = useSendTransaction();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash,
   });
@@ -46,16 +46,12 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
     }
   }, [assets, selectedToken]);
 
-  React.useEffect(() => {
-    if (isConfirmed) {
-      // Reset form and close modal on success
-      setRecipient("");
-      setAmount("");
-      setTimeout(() => {
-        onClose();
-      }, 2000);
-    }
-  }, [isConfirmed, onClose]);
+  const handleClose = () => {
+    // Reset all form fields and transaction states
+    setAmount("");
+    reset();
+    onClose();
+  };
 
   const handleMaxClick = () => {
     if (!selectedAsset) return;
@@ -142,7 +138,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
   const isValidAddress = recipient && Address.validate(recipient);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Send Assets">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Send Assets">
       <form onSubmit={handleSend} className="space-y-4">
         <div>
           <label
@@ -154,7 +150,10 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
           <select
             id="token"
             value={selectedToken}
-            onChange={(e) => setSelectedToken(e.target.value)}
+            onChange={(e) => {
+              setSelectedToken(e.target.value);
+              setAmount("");
+            }}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
           >
             {assets?.map((asset) => (
@@ -268,7 +267,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
         <div className="flex gap-2 pt-2">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Cancel
