@@ -93,6 +93,13 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
     (asset) => asset.address === selectedToken
   );
 
+  // Find native ETH balance for gas check
+  const nativeEthAsset = assets?.find(
+    (asset) => asset.address === "0x0000000000000000000000000000000000000000"
+  );
+  const nativeEthBalance = nativeEthAsset ? Number(nativeEthAsset.balance) / Math.pow(10, nativeEthAsset.decimals) : 0;
+  const hasNoGas = nativeEthBalance === 0;
+
   const isValidAddress = recipient && Address.validate(recipient);
 
   return (
@@ -179,6 +186,20 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
           )}
         </div>
 
+        {hasNoGas && (
+          <div className="rounded-lg bg-yellow-50 p-3 text-sm text-yellow-800 border border-yellow-200">
+            <div className="flex items-start gap-2">
+              <span className="text-yellow-600">⚠️</span>
+              <div>
+                <p className="font-medium">Insufficient gas balance</p>
+                <p className="mt-1 text-xs">
+                  You have 0 ETH balance. You need ETH to pay for gas fees to send transactions.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
             Error: {error.message}
@@ -206,7 +227,8 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
               !amount ||
               !isValidAddress ||
               isPending ||
-              isConfirming
+              isConfirming ||
+              hasNoGas
             }
             className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
