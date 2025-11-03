@@ -201,7 +201,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
         )}
 
         {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 max-h-40 overflow-y-auto">
             Error: {error.message}
           </div>
         )}
