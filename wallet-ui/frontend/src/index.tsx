@@ -10,39 +10,9 @@ import { EcosystemProvider, OpenfortProvider, RecoveryMethod } from '@openfort/e
 import * as Wagmi from './lib/Wagmi';
 import * as Query from './lib/Query'
 
-const suppressedWarnings = [
-  'No events received, re-sending ready.',
-  'Core already initialized, ignoring config',
-]
-
-const suppressedErrors = [
-  '[UserManager] getUser: user not found in storage',
-]
-
-if (process.env.NODE_ENV === 'development') {
-  const originalWarn = console.warn
-  const originalError = console.error
-
-  console.warn = (...args) => {
-    const message = typeof args[0] === 'string' ? args[0] : ''
-    if (suppressedWarnings.some((text) => message.includes(text))) {
-      return
-    }
-    originalWarn(...args)
-  }
-
-  console.error = (...args) => {
-    const message = typeof args[0] === 'string' ? args[0] : ''
-    if (suppressedErrors.some((text) => message.includes(text))) {
-      return
-    }
-    originalError(...args)
-  }
-}
-
 async function getShieldSession(accessToken:string):Promise<string> {
   const isProd = process.env.REACT_APP_OPENFORT_PUBLIC_KEY!.includes('live');
-
+  
   const response = await fetch(`${process.env.REACT_APP_BACKEND_URL!}/api/protected-create-encryption-session`, {
     method: 'POST',
     headers: {
@@ -64,7 +34,6 @@ async function getShieldSession(accessToken:string):Promise<string> {
 
 const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
   const nav = useNavigate();
-  const debugEnabled = process.env.REACT_APP_OPENFORT_DEBUG === 'true';
   
   return (
       <WagmiProvider config={Wagmi.config}>
@@ -84,14 +53,14 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
           backendUrl={process.env.REACT_APP_BACKEND_URL!}
         >
           <OpenfortProvider
-            debugMode={debugEnabled}
+            debugMode={true}
             ecosystemId={process.env.REACT_APP_OPENFORT_ECOSYSTEM_ID!}
             onRedirectCallback={(appState) => {
               return nav(appState?.returnTo || window.location.pathname);
             } }
             publishableKey={process.env.REACT_APP_OPENFORT_PUBLIC_KEY!}
             embeddedSignerConfiguration={{
-              debug: debugEnabled,
+              debug: true,
               shieldPublishableKey: process.env.REACT_APP_SHIELD_PUBLIC_KEY!,
               recoveryMethod: RecoveryMethod.AUTOMATIC,
               getEncryptionSessionFn(getAccessToken) {
@@ -113,12 +82,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-      }}
-    >
+    <BrowserRouter>
       <ProvidersWrapper>
         <App />
       </ProvidersWrapper>

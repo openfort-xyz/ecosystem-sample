@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useAccount, useChainId, useConfig } from "wagmi";
+import { useAccount, useBlockNumber, useChainId, useConfig } from "wagmi";
 import { ExternalLink, PersonStanding, Send, QrCode, LogOut } from "lucide-react";
 import { Button, useOpenfort } from "@openfort/ecosystem-js/react";
 import { cx } from "class-variance-authority";
@@ -29,12 +29,19 @@ export function Dashboard() {
   const { data: transfers } = useAddressTransfers({
     chainIds: [chainId],
   });
-  const { data: assets } = useSwapAssets({
+  const { data: assets, refetch: refetchSwapAssets } = useSwapAssets({
     chainId: chainId,
+  });
+  const { data: blockNumber } = useBlockNumber({
+    watch: { enabled: account.status === "connected", pollingInterval: 800 },
   });
 
   const [isSendModalOpen, setIsSendModalOpen] = React.useState(false);
   const [isGetModalOpen, setIsGetModalOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    refetchSwapAssets();
+  }, [blockNumber]);
 
   const [selectedChains, _setSelectedChains] = React.useState(
     config.chains.map((c) => c.id.toString())

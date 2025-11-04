@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Address } from 'ox'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { useAccount, useBalance, useChainId } from 'wagmi'
+import { useAccount, useBalance, useBlockNumber, useChainId } from 'wagmi'
 import { baseSepolia } from 'wagmi/chains'
 import { ChainId, config } from '../lib/Wagmi'
 import * as Query from '../lib/Query'
@@ -59,10 +59,7 @@ export function useTokenBalances({
       return data as Array<Array<TokenBalance>>
     },
     queryKey: ['token-balances', userAddress, chainId],
-    refetchInterval: userAddress ? 10_000 : false,
-    refetchIntervalInBackground: true,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+    refetchInterval: 2_500,
     select: (data) => data.flat(),
   })
 
@@ -166,10 +163,7 @@ export function useAddressTransfers({
         }
       },
       queryKey: ['address-transfers', userAddress, chainId],
-      refetchInterval: userAddress ? 10_000 : false,
-      refetchIntervalInBackground: true,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchInterval: 2_500,
     },
     {
       // 2. Transactions
@@ -196,10 +190,7 @@ export function useAddressTransfers({
         }
       },
       queryKey: ['transactions', userAddress, chainId],
-      refetchInterval: userAddress ? 10_000 : false,
-      refetchIntervalInBackground: true,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchInterval: 2_500,
     }]),
   })
 
@@ -218,13 +209,17 @@ export function useAddressTransfers({
     [userAddress, refetchBalances],
   )
 
+  const { data: blockNumber } = useBlockNumber({
+    watch: {
+      enabled: account.status === 'connected',
+      pollingInterval: 800,
+    },
+  })
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: refetch every block
   React.useEffect(() => {
-    if (account.status !== 'connected') return
-    const interval = setInterval(() => {
-      refetch()
-    }, 10_000)
-    return () => clearInterval(interval)
-  }, [account.status, refetch])
+    refetch()
+  }, [blockNumber])
 
   const { data, error, isError, isSuccess, isPending } = results
 

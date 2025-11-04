@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { Address } from 'ox'
 import type { Prettify } from 'viem'
@@ -9,27 +8,16 @@ import { useReadBalances } from './useReadBalances'
 /** returns assets with prices: default assets + assets from balances */
 export function useSwapAssets({ chainId }: { chainId: ChainId }) {
   const { data: balances, refetch: refetchBalances } = useReadBalances({ chainId })
-  const serializedBalancesKey = React.useMemo(
-    () =>
-      balances
-        ?.map(
-          (asset) =>
-            `${asset.address}:${asset.balance.toString()}:${asset.symbol}`,
-        )
-        .join('|') ?? 'none',
-    [balances],
-  )
 
   const { data, isLoading, isPending, refetch } = useQuery({
-    enabled: Boolean(chainId && balances),
-    queryFn: async ({
-      queryKey: [, chainId],
-    }) => {
+    queryFn: async ({ queryKey: [, chainId] }) => {
       const defaultAssets_ = defaultAssets[chainId]?.filter(
         (asset) =>
           asset.address !== '0x0000000000000000000000000000000000000000',
       )
       if (!defaultAssets_ || !balances) return []
+
+      refetchBalances()
 
       const balancesAssets = balances.map((balance) => ({
         address: balance.address,
@@ -74,24 +62,10 @@ export function useSwapAssets({ chainId }: { chainId: ChainId }) {
         }))
       }
     },
-    queryKey: ['swap-assets', chainId, serializedBalancesKey] as const,
-    refetchOnWindowFocus: false,
-    refetchInterval: balances ? 10_000 : false,
-    refetchIntervalInBackground: true,
-    staleTime: 10_000,
+    queryKey: ['swap-assets', chainId] as const,
   })
 
-  const refetchAll = React.useCallback(
-    async () => {
-      await Promise.allSettled([
-        refetchBalances(),
-        refetch({ cancelRefetch: true, throwOnError: false }),
-      ])
-    },
-    [refetch, refetchBalances],
-  )
-
-  return { data, isLoading, isPending, refetch: refetchAll }
+  return { data, isLoading, isPending, refetch }
 }
 
 export type AssetWithPrice = LlamaFiPrice & {
