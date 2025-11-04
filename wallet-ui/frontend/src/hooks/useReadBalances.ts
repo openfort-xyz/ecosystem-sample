@@ -1,14 +1,13 @@
+import * as React from 'react'
 import type { Address } from 'ox'
 import { erc20Abi } from 'viem'
-import {
-  useAccount,
-  useBalance,
-  useReadContracts,
-  useWatchBlockNumber,
-} from 'wagmi'
+import { useAccount, useBalance, useReadContracts } from 'wagmi'
 
 import { defaultAssets, ethAsset } from '../lib/Constants'
 import { ChainId } from '../lib/Wagmi'
+
+const SYNC_INTERVAL_MS = 1_000
+const STALE_TIME_MS = 1_000
 
 export function useReadBalances({
   address,
@@ -24,7 +23,22 @@ export function useReadBalances({
 
   const account = useAccount()
   const accountAddress = address ?? account.address
-  const { data: ethBalance, refetch: refetchEthBalance } = useBalance({ address: accountAddress, chainId })
+  const hasAccountAddress = Boolean(accountAddress)
+  const canFetchBalances = hasAccountAddress && Boolean(chainId)
+
+  const { data: ethBalance, refetch: refetchEthBalance } = useBalance({
+    address: accountAddress,
+    chainId,
+    query: {
+      enabled: canFetchBalances,
+      staleTime: STALE_TIME_MS,
+      gcTime: 60_000,
+      refetchInterval: canFetchBalances ? SYNC_INTERVAL_MS : false,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  })
 
   const { data, isLoading, isPending, refetch } = useReadContracts({
     contracts: assets.map((asset) => ({
@@ -34,13 +48,24 @@ export function useReadBalances({
       functionName: 'balanceOf',
     })),
     query: {
+      enabled: canFetchBalances,
+      staleTime: STALE_TIME_MS,
+      gcTime: 60_000,
+      refetchInterval: canFetchBalances ? SYNC_INTERVAL_MS : false,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       select: (data) => {
         const result = data.map((datum, index) => ({
-          balance: BigInt(datum.result!),
+          balance:
+            typeof datum.result === 'bigint'
+              ? datum.result
+              : datum.result != null
+                ? BigInt(datum.result as string | number)
+                : BigInt(0),
           ...assets[index],
         }))
 
-        refetchEthBalance()
         result.unshift({ balance: ethBalance?.value ?? BigInt(0), ...ethAsset })
 
         return result as ReadonlyArray<{
@@ -54,15 +79,19 @@ export function useReadBalances({
     },
   })
 
-  useWatchBlockNumber({
-    enabled: account.status === 'connected',
-    onBlockNumber: () => refetch(),
-  })
+  const refetchAll = React.useCallback(async () => {
+    if (!canFetchBalances) return
+
+    await Promise.allSettled([
+      refetch({ cancelRefetch: true, throwOnError: false }),
+      refetchEthBalance({ cancelRefetch: true, throwOnError: false }),
+    ])
+  }, [canFetchBalances, refetch, refetchEthBalance])
 
   return {
     data,
     isLoading,
     isPending,
-    refetch,
+    refetch: () => refetchAll(),
   }
 }
