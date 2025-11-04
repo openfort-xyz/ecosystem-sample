@@ -3,7 +3,7 @@
   "version": "0.0.125",
   "private": true,
   "dependencies": {
-    "@openfort/ecosystem-js": "^0.1.43",
+    "@openfort/ecosystem-js": "^0.1.45",
     "@radix-ui/react-checkbox": "^1.1.5",
     "@tanstack/react-query": "^5.32.1",
     "@types/node": "^16.7.13",
