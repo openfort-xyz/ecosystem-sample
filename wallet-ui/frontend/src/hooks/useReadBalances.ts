@@ -40,7 +40,6 @@ export function useReadBalances({
           ...assets[index],
         }))
 
-        refetchEthBalance()
         result.unshift({ balance: ethBalance?.value ?? BigInt(0), ...ethAsset })
 
         return result as ReadonlyArray<{
@@ -56,7 +55,10 @@ export function useReadBalances({
 
   useWatchBlockNumber({
     enabled: account.status === 'connected',
-    onBlockNumber: () => refetch(),
+    onBlockNumber: () => {
+      refetch()
+      refetchEthBalance()
+    },
   })
 
   return {
