@@ -3,6 +3,8 @@ import { ancient8Sepolia, base, baseSepolia, dosChainTestnet, kromaSepolia, poly
 import { ChainId } from './Wagmi'
 
 
+export const DEFAULT_POLL_INTERVAL_MS = 5_000
+
 export const ethAsset = {
   address: '0x0000000000000000000000000000000000000000',
   decimals: 18,

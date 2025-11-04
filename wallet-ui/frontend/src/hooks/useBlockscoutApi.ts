@@ -3,8 +3,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Address } from 'ox'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { useAccount, useBalance, useBlockNumber, useChainId } from 'wagmi'
+import { useAccount, useBalance, useChainId } from 'wagmi'
 import { baseSepolia } from 'wagmi/chains'
+import { DEFAULT_POLL_INTERVAL_MS } from '../lib/Constants'
 import { ChainId, config } from '../lib/Wagmi'
 import * as Query from '../lib/Query'
 import { useReadBalances } from './useReadBalances'
@@ -25,6 +26,7 @@ export function useTokenBalances({
 } = {}) {
   const account = useAccount()
   const userAddress = address ?? account.address
+  const isValidAddress = Boolean(userAddress && Address.validate(userAddress))
 
   const {
     data: tokenBalances,
@@ -35,7 +37,7 @@ export function useTokenBalances({
     isSuccess,
     isPending,
   } = useQuery({
-    enabled: userAddress && Address.validate(userAddress),
+    enabled: isValidAddress,
     queryFn: async () => {
       const chains = config.chains.filter((c) => c.id === chainId)
       const responses = await Promise.all(
@@ -59,7 +61,10 @@ export function useTokenBalances({
       return data as Array<Array<TokenBalance>>
     },
     queryKey: ['token-balances', userAddress, chainId],
-    refetchInterval: 2_500,
+    refetchInterval: isValidAddress ? DEFAULT_POLL_INTERVAL_MS : false,
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: false,
+    staleTime: DEFAULT_POLL_INTERVAL_MS,
     select: (data) => data.flat(),
   })
 
@@ -125,6 +130,7 @@ export function useAddressTransfers({
 
   const userAddress = address ?? account.address
   const userChainIds = chainIds ?? [chainId]
+  const shouldPoll = account.status === 'connected' && Boolean(userAddress)
 
   const { refetch: refetchBalances } = useReadBalances({
     address: userAddress,
@@ -141,7 +147,7 @@ export function useAddressTransfers({
     }),
     queries: userChainIds.flatMap((chainId) => [{
       // 1. Token transfers
-      enabled: account.status === 'connected',
+      enabled: shouldPoll,
       queryFn: async () => {
         const apiEndpoint = addressApiEndpoint(chainId)
         const url = `${apiEndpoint}/addresses/${userAddress}/token-transfers`
@@ -163,11 +169,14 @@ export function useAddressTransfers({
         }
       },
       queryKey: ['address-transfers', userAddress, chainId],
-      refetchInterval: 2_500,
+      refetchInterval: shouldPoll ? DEFAULT_POLL_INTERVAL_MS : false,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
+      staleTime: DEFAULT_POLL_INTERVAL_MS,
     },
     {
       // 2. Transactions
-      enabled: account.status === 'connected',
+      enabled: shouldPoll,
       queryFn: async () => {
         const apiEndpoint = addressApiEndpoint(chainId)
         const url = `${apiEndpoint}/addresses/${userAddress}/transactions`
@@ -190,7 +199,10 @@ export function useAddressTransfers({
         }
       },
       queryKey: ['transactions', userAddress, chainId],
-      refetchInterval: 2_500,
+      refetchInterval: shouldPoll ? DEFAULT_POLL_INTERVAL_MS : false,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: false,
+      staleTime: DEFAULT_POLL_INTERVAL_MS,
     }]),
   })
 
@@ -208,18 +220,6 @@ export function useAddressTransfers({
         .then(() => refetchBalances()),
     [userAddress, refetchBalances],
   )
-
-  const { data: blockNumber } = useBlockNumber({
-    watch: {
-      enabled: account.status === 'connected',
-      pollingInterval: 800,
-    },
-  })
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: refetch every block
-  React.useEffect(() => {
-    refetch()
-  }, [blockNumber])
 
   const { data, error, isError, isSuccess, isPending } = results
 

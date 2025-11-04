@@ -1,13 +1,13 @@
+import * as React from 'react'
 import type { Address } from 'ox'
 import { erc20Abi } from 'viem'
-import {
-  useAccount,
-  useBalance,
-  useReadContracts,
-  useWatchBlockNumber,
-} from 'wagmi'
+import { useAccount, useBalance, useReadContracts } from 'wagmi'
 
-import { defaultAssets, ethAsset } from '../lib/Constants'
+import {
+  DEFAULT_POLL_INTERVAL_MS,
+  defaultAssets,
+  ethAsset,
+} from '../lib/Constants'
 import { ChainId } from '../lib/Wagmi'
 
 export function useReadBalances({
@@ -24,7 +24,10 @@ export function useReadBalances({
 
   const account = useAccount()
   const accountAddress = address ?? account.address
-  const { data: ethBalance, refetch: refetchEthBalance } = useBalance({ address: accountAddress, chainId })
+  const { data: ethBalance, refetch: refetchEthBalance } = useBalance({
+    address: accountAddress,
+    chainId,
+  })
 
   const { data, isLoading, isPending, refetch } = useReadContracts({
     contracts: assets.map((asset) => ({
@@ -34,6 +37,7 @@ export function useReadBalances({
       functionName: 'balanceOf',
     })),
     query: {
+      enabled: !!accountAddress,
       select: (data) => {
         const result = data.map((datum, index) => ({
           balance: BigInt(datum.result!),
@@ -50,16 +54,22 @@ export function useReadBalances({
           address: string
         }>
       },
+      staleTime: DEFAULT_POLL_INTERVAL_MS,
     },
   })
 
-  useWatchBlockNumber({
-    enabled: account.status === 'connected',
-    onBlockNumber: () => {
+  React.useEffect(() => {
+    if (account.status !== 'connected' || !accountAddress) return
+
+    const interval = setInterval(() => {
       refetch()
       refetchEthBalance()
-    },
-  })
+    }, DEFAULT_POLL_INTERVAL_MS)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [account.status, accountAddress, refetch, refetchEthBalance])
 
   return {
     data,

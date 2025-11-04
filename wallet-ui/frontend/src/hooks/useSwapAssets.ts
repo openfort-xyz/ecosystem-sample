@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Address } from 'ox'
 import type { Prettify } from 'viem'
-import { defaultAssets, ethAsset } from '../lib/Constants'
+import {
+  DEFAULT_POLL_INTERVAL_MS,
+  defaultAssets,
+  ethAsset,
+} from '../lib/Constants'
 import { ChainId, getChainConfig } from '../lib/Wagmi'
 import { useReadBalances } from './useReadBalances'
 
@@ -61,6 +65,9 @@ export function useSwapAssets({ chainId }: { chainId: ChainId }) {
       }
     },
     queryKey: ['swap-assets', chainId] as const,
+    enabled: Boolean(balances),
+    refetchOnWindowFocus: false,
+    staleTime: DEFAULT_POLL_INTERVAL_MS,
   })
 
   return { data, isLoading, isPending, refetch }
