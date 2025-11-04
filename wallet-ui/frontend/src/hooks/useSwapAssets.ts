@@ -17,8 +17,6 @@ export function useSwapAssets({ chainId }: { chainId: ChainId }) {
       )
       if (!defaultAssets_ || !balances) return []
 
-      refetchBalances()
-
       const balancesAssets = balances.map((balance) => ({
         address: balance.address,
         balance: balance.balance,
