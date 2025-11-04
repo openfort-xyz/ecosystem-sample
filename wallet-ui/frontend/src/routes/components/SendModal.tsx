@@ -73,10 +73,10 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
       
       // Subtract gas cost from balance, ensuring we don't go negative
       const maxSendable = Math.max(0, balanceInToken - gasCostInEth);
-      setAmount(String(maxSendable));
+      setAmount(maxSendable.toString());
     } else {
       // For ERC20 tokens, use full balance
-      setAmount(String(balanceInToken));
+      setAmount(balanceInToken.toString());
     }
   };
 
@@ -194,12 +194,18 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
           <div className="relative">
             <input
               id="amount"
-              type="number"
-              step="any"
+              type="text"
+              inputMode="decimal"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow empty string, numbers, and one decimal point
+                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                  setAmount(value);
+                }
+              }}
               placeholder="0.0"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
             />
             {selectedAsset && (
               <div className="absolute right-3 top-2 text-sm text-gray-500">
