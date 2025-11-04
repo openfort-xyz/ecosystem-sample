@@ -2238,10 +2238,10 @@
   dependencies:
     ethers "^6.0.2"
 
-"@openfort/ecosystem-js@^0.1.45":
-  version "0.1.45"
-  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.1.45.tgz#57eec7e9e2bc726ca108b0c4f430d1d624d96534"
-  integrity sha512-XZXwEB3GZp6NDnq4Wbya1ZwX8ZjArelbBB7YjXqfdpkRWsNwJlRnuoWtjJKkWT7jxX2lf5K5FKcaJty37zPmBg==
+"@openfort/ecosystem-js@^0.1.46":
+  version "0.1.46"
+  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.1.46.tgz#c19f7f7f35aa6d1cdbc7f70660ff4449c9f47d39"
+  integrity sha512-j9FUVxmCySpjUYF2YOUFYRAMRhTmwnDS6kmX2KULPKr9aBk+ppXXs+QWiVMjtS9SMONuH+3YettKKkkZIQvV3A==
   dependencies:
     "@openchainxyz/abi-guesser" "1.0.2"
     "@openfort/openfort-js" "^0.10.7"
