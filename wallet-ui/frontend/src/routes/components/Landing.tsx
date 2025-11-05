@@ -44,7 +44,7 @@ export function Landing() {
     };
     console.log("Attempting wallet recovery");
     attemptWalletRecovery();
-  }, [isAuthenticated, isReady, showPasswordInput, isRecovering, chainId]);
+  }, [isAuthenticated, isReady, showPasswordInput, chainId, handleWalletRecovery]);
 
   // Handle password recovery
   const handlePasswordRecovery = async () => {
