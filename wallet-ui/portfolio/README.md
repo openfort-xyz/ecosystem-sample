@@ -23,6 +23,11 @@ REACT_APP_OPENFORT_PUBLIC_KEY=your_openfort_public_key
 REACT_APP_OPENFORT_ECOSYSTEM_ID=your_ecosystem_id
 REACT_APP_SHIELD_PUBLIC_KEY=your_shield_public_key
 
+# Optional: Policy ID for sponsoring transactions (from Openfort dashboard)
+# If set, all transactions will be sponsored using this gas policy
+# Learn more: https://dashboard.openfort.io/policies
+REACT_APP_POLICY_ID=pol_your_policy_id
+
 # Port for portfolio app (different from frontend which uses 3000)
 PORT=3002
 ```
