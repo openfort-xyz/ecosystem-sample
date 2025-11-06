@@ -1,18 +1,20 @@
 import * as React from "react";
-import { useConnect } from 'wagmi';
+import { useOpenfort } from '@openfort/ecosystem-js/react';
 import { LogoMark } from './LogoMark';
 
 export function Landing() {
-  const { connectors, connect } = useConnect();
+  const openfort = useOpenfort();
 
-  const connectWallet = React.useCallback(() => {
-    const injectedConnector = connectors.find(
-      (connector) => connector.id === 'com.rapidfire.id'
-    );
-    if (injectedConnector) {
-      connect({ connector: injectedConnector });
+  const connectWallet = React.useCallback(async () => {
+    try {
+      // Authenticate with Openfort
+      await openfort.login({
+        returnTo: window.location.pathname
+      });
+    } catch (error) {
+      console.error('Authentication error:', error);
     }
-  }, [connectors, connect]);
+  }, [openfort]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between">

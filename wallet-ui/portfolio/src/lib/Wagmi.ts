@@ -1,10 +1,8 @@
 import { http, createConfig } from 'wagmi'
 import { ancient8Sepolia, baseSepolia, polygonAmoy, sepolia, dosChainTestnet, base } from 'wagmi/chains'
-import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
   chains: [polygonAmoy, base, baseSepolia, sepolia, ancient8Sepolia, dosChainTestnet],
-  connectors: [injected()],
   transports: {
     [polygonAmoy.id]: http('https://polygon-amoy.gateway.tenderly.co'),
     [baseSepolia.id]: http("https://sepolia.base.org"),
