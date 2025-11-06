@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useAccount, useBlockNumber, useChainId, useConfig } from "wagmi";
+import { useAccount, useBlockNumber, useChainId, useConfig, useDisconnect } from "wagmi";
 import { ExternalLink, PersonStanding, Send, QrCode, LogOut } from "lucide-react";
-import { Button, useOpenfort } from "@openfort/ecosystem-js/react";
 import { cx } from "class-variance-authority";
 import { Address, Value } from 'ox'
 
@@ -17,7 +16,7 @@ import { SendModal } from "./SendModal";
 import { GetModal } from "./GetModal";
 
 export function Dashboard() {
-  const { logout } = useOpenfort();
+  const { disconnect } = useDisconnect();
   const account = useAccount();
   const chainId = useChainId();
   const { chains } = useConfig();
@@ -98,8 +97,12 @@ export function Dashboard() {
             </div>
             <button
               onClick={async () => {
-                await logout()
-                window.location.reload()
+                disconnect();
+                const provider = await account.connector?.getProvider();
+                if (provider && typeof provider === 'object' && 'disconnect' in provider) {
+                  (provider as any).disconnect();
+                }
+                window.location.reload();
               }}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
             >
@@ -109,21 +112,20 @@ export function Dashboard() {
           </div>
           <div className="h-6" />
           <div className="flex gap-2">
-            <Button
+            <button
               onClick={() => setIsGetModalOpen(true)}
-              className="flex-1 flex items-center justify-center gap-2"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors font-medium"
             >
               <QrCode className="size-4 mr-2" />
               Deposit
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => setIsSendModalOpen(true)}
-              variant="primary"
-              className="flex-1 flex items-center justify-center gap-2"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
             >
               <Send className="size-4 mr-2" />
               Send
-            </Button>
+            </button>
           </div>
           <div className="h-6" />
           <hr className="border-gray-200" />
