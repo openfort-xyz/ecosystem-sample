@@ -10,6 +10,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "lucide-react": "^0.263.1",
     "ox": "^0.1.2",
@@ -56,4 +57,3 @@
   },
   "packageManager": "pnpm@10.20.0"
 }
-
