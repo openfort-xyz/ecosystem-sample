@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useAccount } from 'wagmi'
 
-import { Landing } from '../components/Landing'
-import { Dashboard } from '../components/Dashboard'
-import Loading from '../components/Loading'
+import { Landing } from './components/Landing'
+import { Dashboard } from './components/Dashboard'
+import Loading from './components/Loading'
 
 export function Home() {
   const account = useAccount()
@@ -24,3 +24,4 @@ export function Home() {
   if (!account.isConnected) return <Landing />
   return <Dashboard />
 }
+
