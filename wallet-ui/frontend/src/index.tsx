@@ -69,6 +69,7 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
           theme='midnight'
           logoUrl='https://purple-magnificent-bat-958.mypinata.cloud/ipfs/QmfQrh2BiCzugFauYF9Weu9SFddsVh9qV82uw43cxH8UDV'
           backendUrl={process.env.REACT_APP_BACKEND_URL!}
+          disableTransactionSimulation={false}  // disable in case of problems with transaction simulation
         >
           <OpenfortProvider
             debugMode={true}
