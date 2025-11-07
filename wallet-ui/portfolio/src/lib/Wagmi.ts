@@ -3,7 +3,7 @@ import { ancient8Sepolia, baseSepolia, polygonAmoy, sepolia, dosChainTestnet, ba
 import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
-  chains: [polygonAmoy, base, baseSepolia, sepolia, ancient8Sepolia, dosChainTestnet],
+  chains: [baseSepolia, sepolia, polygonAmoy, base, ancient8Sepolia, dosChainTestnet],
   connectors: [injected()],
   transports: {
     [polygonAmoy.id]: http('https://polygon-amoy.gateway.tenderly.co'),
