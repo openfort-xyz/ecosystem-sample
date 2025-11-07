@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -35,6 +35,29 @@ async function getShieldSession(accessToken:string):Promise<string> {
 const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
   const nav = useNavigate();
   
+  // Memoize callbacks to prevent OpenfortProvider from re-initializing on every render
+  const handleNavigateTo = useCallback((appState: any) => {
+    nav({
+      pathname: appState?.to,
+      search: appState?.search
+    });
+  }, [nav]);
+  
+  const handleRedirectCallback = useCallback((appState: any) => {
+    return nav(appState?.returnTo || window.location.pathname);
+  }, [nav]);
+  
+  // Memoize embedded signer configuration
+  const embeddedSignerConfig = useMemo(() => ({
+    debug: true,
+    shieldPublishableKey: process.env.REACT_APP_SHIELD_PUBLIC_KEY!,
+    recoveryMethod: RecoveryMethod.AUTOMATIC as RecoveryMethod.AUTOMATIC,
+    getEncryptionSessionFn: getShieldSession
+  }), []);
+  
+  // Memoize overrides to prevent re-initialization
+  const overrides = useMemo(() => ({}), []);
+  
   return (
       <WagmiProvider config={Wagmi.config}>
         <QueryClientProvider 
@@ -42,32 +65,20 @@ const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
         >
         <EcosystemProvider
           appName='Rapidfire ID'
-          navigateTo={(appState) => {
-            nav({
-              pathname: appState?.to,
-              search: appState?.search
-            })
-          }}
+          navigateTo={handleNavigateTo}
           theme='midnight'
           logoUrl='https://purple-magnificent-bat-958.mypinata.cloud/ipfs/QmfQrh2BiCzugFauYF9Weu9SFddsVh9qV82uw43cxH8UDV'
           backendUrl={process.env.REACT_APP_BACKEND_URL!}
+          disableTransactionSimulation={false}  // disable in case of problems with transaction simulation
         >
           <OpenfortProvider
             debugMode={true}
             ecosystemId={process.env.REACT_APP_OPENFORT_ECOSYSTEM_ID!}
-            onRedirectCallback={(appState) => {
-              return nav(appState?.returnTo || window.location.pathname);
-            } }
+            onRedirectCallback={handleRedirectCallback}
             publishableKey={process.env.REACT_APP_OPENFORT_PUBLIC_KEY!}
-            embeddedSignerConfiguration={{
-              debug: true,
-              shieldPublishableKey: process.env.REACT_APP_SHIELD_PUBLIC_KEY!,
-              recoveryMethod: RecoveryMethod.AUTOMATIC,
-              getEncryptionSessionFn(getAccessToken) {
-                return getShieldSession(getAccessToken);
-              }
-            }} 
-            overrides={{}}>
+            embeddedSignerConfiguration={embeddedSignerConfig}
+            overrides={overrides}
+          >
             {children}
           </OpenfortProvider>
           </EcosystemProvider>

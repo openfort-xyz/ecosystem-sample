@@ -1,21 +1,22 @@
 import * as React from "react";
-import { useAccount, useBlockNumber, useChainId, useConfig } from "wagmi";
-import { ExternalLink, PersonStanding } from "lucide-react";
-import { Button, useOpenfort } from "@openfort/ecosystem-js/react";
+import { useAccount, useBlockNumber, useChainId, useConfig, useDisconnect } from "wagmi";
+import { ExternalLink, PersonStanding, Send, QrCode, LogOut } from "lucide-react";
 import { cx } from "class-variance-authority";
 import { Address, Value } from 'ox'
 
-import { useAddressTransfers } from "../../hooks/useBlockscoutApi";
-import { useSwapAssets } from "../../hooks/useSwapAssets";
-import { useErc20Info } from '../../hooks/useTokenInfo'
-import { config } from "../../lib/Wagmi";
-import { sum, ValueFormatter, DateFormatter, StringFormatter } from "../../utils";
+import { useAddressTransfers } from "../hooks/useBlockscoutApi";
+import { useSwapAssets } from "../hooks/useSwapAssets";
+import { useErc20Info } from '../hooks/useTokenInfo'
+import { config } from "../lib/Wagmi";
+import { sum, ValueFormatter, DateFormatter, StringFormatter } from "../utils";
 import { ShowMore } from "./ShowMore";
 import { TruncatedAddress } from "./TruncatedAddress";
 import { LogoMark } from "./LogoMark";
+import { SendModal } from "./SendModal";
+import { GetModal } from "./GetModal";
 
 export function Dashboard() {
-  const { logout } = useOpenfort();
+  const { disconnect } = useDisconnect();
   const account = useAccount();
   const chainId = useChainId();
   const { chains } = useConfig();
@@ -34,11 +35,14 @@ export function Dashboard() {
     watch: { enabled: account.status === "connected", pollingInterval: 800 },
   });
 
+  const [isSendModalOpen, setIsSendModalOpen] = React.useState(false);
+  const [isGetModalOpen, setIsGetModalOpen] = React.useState(false);
+
   React.useEffect(() => {
     refetchSwapAssets();
-  }, [blockNumber]);
+  }, [blockNumber, refetchSwapAssets]);
 
-  const [selectedChains, _setSelectedChains] = React.useState(
+  const [selectedChains] = React.useState(
     config.chains.map((c) => c.id.toString())
   );
 
@@ -80,7 +84,7 @@ export function Dashboard() {
             </div>
           </div>
           <div className="h-8" />
-          <div className="flex max-h-[100px] w-full">
+          <div className="flex max-h-[100px] w-full items-start justify-between">
             <div className="flex flex-1 flex-col justify-between">
               <div className="font-[500] text-[13px] text-gray-400">
                 Your account
@@ -91,6 +95,37 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
+            <button
+              onClick={async () => {
+                disconnect();
+                const provider = await account.connector?.getProvider();
+                if (provider && typeof provider === 'object' && 'disconnect' in provider) {
+                  (provider as any).disconnect();
+                }
+                window.location.reload();
+              }}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="size-4" />
+              Log out
+            </button>
+          </div>
+          <div className="h-6" />
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsGetModalOpen(true)}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors font-medium"
+            >
+              <QrCode className="size-4 mr-2" />
+              Deposit
+            </button>
+            <button
+              onClick={() => setIsSendModalOpen(true)}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+            >
+              <Send className="size-4 mr-2" />
+              Send
+            </button>
           </div>
           <div className="h-6" />
           <hr className="border-gray-200" />
@@ -217,24 +252,23 @@ export function Dashboard() {
           <div className="h-6" />
           <hr className="border-gray-200" />
           <div className="h-4" />
-          <div className="flex gap-2">
-            <Button>
-              <a href="https://t.me/openfort" rel="noreferrer" target="_blank">
-                Help
-              </a>
-            </Button>
-            <Button
-              onClick={async () => {
-                await logout()
-                window.location.reload()
-
-              }}
-              variant="primary">
-              Sign out
-            </Button>
+          <div className="text-center text-sm text-gray-600">
+            Are you having any questions or trouble?{' '}
+            <a 
+              href="https://t.me/openfort" 
+              rel="noreferrer" 
+              target="_blank"
+              className="text-blue-600 hover:underline"
+            >
+              Contact us
+            </a>
+            .
           </div>
         </div>
       </div>
+
+      <SendModal isOpen={isSendModalOpen} onClose={() => setIsSendModalOpen(false)} />
+      <GetModal isOpen={isGetModalOpen} onClose={() => setIsGetModalOpen(false)} />
     </div>
   );
 }
@@ -381,3 +415,4 @@ function AssetRow({
     </tr>
   )
 }
+

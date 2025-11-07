@@ -7,7 +7,8 @@ The Ecosystem Wallet is a comprehensive solution for managing digital assets wit
 ```
 wallet-ui/
 ├── frontend/
-└── backend/
+├── backend/
+└── portfolio/
 ```
 
 ### Frontend
@@ -32,6 +33,16 @@ and more ...
 When using [Openfort](https://www.openfort.io/) as embedded signer provider with [**AUTOMATIC recovery**](https://www.openfort.io/docs/products/embedded-wallet/javascript/signer/recovery#automatic-recovery), a backend is required to manage encryption sessions.
 
 For the onramp functionality, such as using [Stripe](https://docs.stripe.com/crypto/onramp/standalone-onramp-guide#mint-session-redirect-url) or [Coinbase](https://docs.cdp.coinbase.com/onramp-&-offramp/onramp-apis/onramp-overview), a backend is required. It must implement an endpoint to create a new onramp session for each user visit and another one to list all the implemented providers.
+
+### Portfolio
+
+The `portfolio` directory contains a standalone application that demonstrates the Rapidfire ecosystem wallet integration. It serves as a reference implementation showing how to integrate the wallet into your own applications.
+
+**Key features:**
+- View token balances across multiple chains
+- Send and receive assets
+- Transaction history
+- **Transaction sponsorship** - sponsor your users' gas fees by setting a policy ID
 
 ## Getting Started
 
@@ -59,6 +70,16 @@ COINBASE_KEY_SECRET=
 PORT=
 ```
 
+#### Portfolio
+```.env
+REACT_APP_BACKEND_URL=
+REACT_APP_OPENFORT_PUBLIC_KEY=
+REACT_APP_OPENFORT_ECOSYSTEM_ID=
+REACT_APP_SHIELD_PUBLIC_KEY=
+REACT_APP_POLICY_ID=  # Optional: Set this to sponsor transaction gas fees
+PORT=
+```
+
 ### Installation
 
 #### Frontend
@@ -71,6 +92,12 @@ yarn install
 ```bash
 cd backend
 yarn install
+```
+
+#### Portfolio
+```bash
+cd portfolio
+pnpm install
 ```
 
 ### Running the Application
@@ -86,3 +113,19 @@ yarn start
 cd backend
 yarn dev
 ```
+
+#### Portfolio
+```bash
+cd portfolio
+pnpm start
+```
+
+## Transaction Sponsorship
+
+The portfolio app supports transaction sponsorship, allowing you to pay for your users' gas fees. To enable this feature:
+
+1. Create a gas policy in your [Openfort Dashboard](https://dashboard.openfort.io/policies)
+2. Set the `REACT_APP_POLICY_ID` environment variable in your `.env` file with your policy ID (e.g., `pol_...`)
+3. When set, all transactions made through the portfolio app will be sponsored using this policy
+
+For more information on gas policies and sponsorship, see the [Openfort documentation on gas sponsorship](https://www.openfort.io/docs/configuration/gas-sponsorship).

@@ -4,7 +4,7 @@ import { Address } from 'ox'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { useAccount, useBalance, useChainId } from 'wagmi'
-import { baseSepolia } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { DEFAULT_POLL_INTERVAL_MS } from '../lib/Constants'
 import { ChainId, config } from '../lib/Wagmi'
 import * as Query from '../lib/Query'
@@ -12,8 +12,8 @@ import { useReadBalances } from './useReadBalances'
 
 export function addressApiEndpoint(chainId: ChainId) {
   // if (chainId === base.id) return 'https://base.blockscout.com/api/v2'
-  if (chainId === baseSepolia.id)
-    return 'https://base-sepolia.blockscout.com/api/v2'
+  if (chainId === sepolia.id)
+    return 'https://eth-sepolia.blockscout.com/api/v2'
   throw new Error(`Unsupported chainId: ${chainId}`)
 }
 
@@ -410,3 +410,4 @@ export function useTransactionsHistory({
     isSuccess,
   }
 }
+

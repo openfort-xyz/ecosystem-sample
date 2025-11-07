@@ -474,10 +474,10 @@
   dependencies:
     ethers "^6.0.2"
 
-"@openfort/ecosystem-js@^0.1.43":
-  version "0.1.43"
-  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.1.43.tgz#5fe5d6a4d702dbb42d1c71679a965f793edbcce2"
-  integrity sha512-exCBfz8vYBB4jkKGaDngg9YtJ0vqSWGAJG4+DunzdWRDqZOHl6pFRljOUw7GE9tNdv8Pup0A+1bmmi0FexpoMw==
+"@openfort/ecosystem-js@^0.1.48":
+  version "0.1.48"
+  resolved "https://registry.yarnpkg.com/@openfort/ecosystem-js/-/ecosystem-js-0.1.48.tgz#ba26dd6791ec8f9c354981c58b611ee2be7d9103"
+  integrity sha512-Alh8/PExj0eYbQFhCXf60tBpMV8QukJLmk8L/k3BDywNEBvVh5K5ccbv9k/HITFI/QMv4wFF6ID3l5/qImVCpw==
   dependencies:
     "@openchainxyz/abi-guesser" "1.0.2"
     "@openfort/openfort-js" "^0.10.7"
@@ -2501,6 +2501,7 @@ source-map@0.8.0-beta.0:
     whatwg-url "^7.0.0"
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -2519,6 +2520,7 @@ string-width@^5.0.1, string-width@^5.1.2:
     strip-ansi "^7.0.1"
 
 "strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  name strip-ansi-cjs
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==

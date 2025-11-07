@@ -3,6 +3,8 @@ import { ancient8Sepolia, base, baseSepolia, dosChainTestnet, kromaSepolia, poly
 import { ChainId } from './Wagmi'
 
 
+export const DEFAULT_POLL_INTERVAL_MS = 5_000
+
 export const ethAsset = {
   address: '0x0000000000000000000000000000000000000000',
   decimals: 18,
@@ -32,7 +34,7 @@ export const defaultAssets: Record<
     },
     {
       address: '0xdC2de190a921D846B35EB92d195c9c3D9C08d1C2',
-      decimals: 18,
+      decimals: 6,
       logo: '/icons/usdc.svg',
       name: 'USD Coin',
       symbol: 'USDC',
@@ -52,6 +54,13 @@ export const defaultAssets: Record<
       logo: '/icons/matic.svg',
       name: 'POLYGON',
       symbol: 'POL',
+    },
+    {
+      address: '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582',
+      decimals: 6,
+      logo: '/icons/usdc.svg',
+      name: 'USD Coin',
+      symbol: 'USDC',
     },
   ],
   [sepolia.id]: [

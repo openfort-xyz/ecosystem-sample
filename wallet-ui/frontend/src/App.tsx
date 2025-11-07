@@ -16,7 +16,6 @@ import {
 } from '@openfort/ecosystem-js/react';
 import { Route, Routes } from 'react-router-dom';
 import Loading from './routes/components/Loading';
-import { Home } from './routes/sign/Home';
 
 const ProtectedRoute = ({ component, ...args }: any) => {
   const Component = withAuthenticationRequired(component, {
@@ -41,7 +40,7 @@ function App() {
       <Route path='/sign/authenticate' element={<LoginMethods />} />
       <Route path='/sign/recover' element={<Recover />} />
       <Route path='/sign/*' element={<UnsupportedMethod />} />
-      <Route path='/' element={<Home/>} />
+      <Route path='/' element={<></>} />
     </Routes>
   );
 }

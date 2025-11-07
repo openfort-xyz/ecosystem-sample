@@ -1,16 +1,14 @@
 import { http, createConfig } from 'wagmi'
-import { ancient8Sepolia, baseSepolia, polygonAmoy, sepolia, dosChainTestnet, base } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
+import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
-  chains: [polygonAmoy, base, baseSepolia, sepolia, ancient8Sepolia, dosChainTestnet],
+  chains: [sepolia],
+  connectors: [injected()],
   transports: {
-    [polygonAmoy.id]: http('https://polygon-amoy.gateway.tenderly.co'),
-    [baseSepolia.id]: http("https://sepolia.base.org"),
     [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
-    [ancient8Sepolia.id]: http(),
-    [dosChainTestnet.id]: http(),
-    [base.id]: http("https://mainnet.base.org"),
   },
+  ssr: true, // Enable auto-reconnection to previously connected wallets
 })
 
 export type Chain = (typeof config.chains)[number]
@@ -23,3 +21,4 @@ declare module 'wagmi' {
     config: typeof config
   }
 }
+
