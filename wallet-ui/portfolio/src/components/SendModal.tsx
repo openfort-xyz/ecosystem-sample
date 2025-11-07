@@ -120,12 +120,15 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
     (asset) => asset.address === selectedToken
   );
 
+  // Check if transactions are sponsored
+  const hasSponsoredTransactions = !!process.env.REACT_APP_POLICY_ID;
+
   // Find native ETH balance for gas check
   const nativeEthAsset = assets?.find(
     (asset) => asset.address === "0x0000000000000000000000000000000000000000"
   );
   const nativeEthBalance = nativeEthAsset ? Number(nativeEthAsset.balance) / Math.pow(10, nativeEthAsset.decimals) : 0;
-  const hasNoGas = nativeEthBalance === 0;
+  const hasNoGas = !hasSponsoredTransactions && nativeEthBalance === 0;
 
   // Calculate minimum gas cost for native ETH
   const isNativeEth = selectedToken === "0x0000000000000000000000000000000000000000";
@@ -133,7 +136,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
   const currentGasPrice = gasPrice || fallbackGasPrice;
   const estimatedGasCost = (estimatedGasLimit * currentGasPrice * BigInt(110)) / BigInt(100);
   const minGasCostInEth = Number(formatEther(estimatedGasCost));
-  const hasInsufficientBalance = isNativeEth && nativeEthBalance > 0 && nativeEthBalance < minGasCostInEth;
+  const hasInsufficientBalance = !hasSponsoredTransactions && isNativeEth && nativeEthBalance > 0 && nativeEthBalance < minGasCostInEth;
 
   const isValidAddress = recipient && Address.validate(recipient);
 
