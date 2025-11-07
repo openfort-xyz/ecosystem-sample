@@ -9,6 +9,15 @@ import {
 import { ChainId, getChainConfig } from '../lib/Wagmi'
 import { useReadBalances } from './useReadBalances'
 
+// Mapping of token symbols to their CoinGecko IDs for price lookups
+const COINGECKO_ID_MAP: Record<string, string> = {
+  'USDC': 'usd-coin',
+  'WETH': 'weth',
+  'ETH': 'ethereum',
+  'POL': 'matic-network',
+  'MATIC': 'matic-network',
+}
+
 /** returns assets with prices: default assets + assets from balances */
 export function useSwapAssets({ chainId }: { chainId: ChainId }) {
   const { data: balances } = useReadBalances({ chainId })
@@ -34,13 +43,25 @@ export function useSwapAssets({ chainId }: { chainId: ChainId }) {
           chainId,
           ids: defaultAssets_.map((asset) => ({
             address: asset.address,
+            symbol: asset.symbol,
           })),
         })
 
-        const assets = defaultAssets_.map((asset) => ({
-          ...asset,
-          ...prices.coins[`${chainId}:${asset.address}`],
-        }))
+        const chain = getChainConfig(chainId)
+        const chainName = chain?.name.toLowerCase() || ''
+
+        const assets = defaultAssets_.map((asset) => {
+          // Try to get price using CoinGecko ID first
+          const coingeckoId = COINGECKO_ID_MAP[asset.symbol]
+          const priceKey = (coingeckoId 
+            ? `coingecko:${coingeckoId}` 
+            : `${chainName}:${asset.address}`) as `${string}:${string}`
+          
+          return {
+            ...asset,
+            ...prices.coins[priceKey],
+          }
+        })
 
         assets.unshift({
           ...ethAsset,
@@ -86,19 +107,22 @@ async function getAssetsPrices({
   ids,
 }: {
   chainId: ChainId
-  ids: Array<{ address: string }>
+  ids: Array<{ address: string; symbol?: string }>
 }) {
   const chain = getChainConfig(chainId)
   if (!chain) throw new Error(`Unsupported chainId: ${chainId}`)
-  const chainName = chain.testnet ? 'ethereum' : chain.name.toLowerCase()
-  const searchParams = ids
-    .filter((asset) =>
-      [
-        '0x0000000000000000000000000000000000000000',
-      ].includes(asset.address.toLowerCase()),
-    )
-    .map((asset) => `${chainName}:${asset.address}`)
-    .join(',')
+  const chainName = chain.name.toLowerCase()
+  
+  const priceIds = ids.map((asset) => {
+    // Use CoinGecko ID for common tokens if available
+    if (asset.symbol && COINGECKO_ID_MAP[asset.symbol]) {
+      return `coingecko:${COINGECKO_ID_MAP[asset.symbol]}`
+    }
+    // Otherwise use chain:address format
+    return `${chainName}:${asset.address}`
+  })
+  
+  const searchParams = priceIds.join(',')
   const response = await fetch(
     `https://coins.llama.fi/prices/current/coingecko:ethereum,${searchParams}?searchWidth=1m`,
   )
