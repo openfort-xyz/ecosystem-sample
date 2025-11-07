@@ -108,7 +108,7 @@ export const defaultAssets: Record<
     {
       address: '0x4200000000000000000000000000000000000006',
       decimals: 18,
-      logo: '/icons/weth.png',
+      logo: '/icons/weth.svg',
       name: 'Wrapped Ether',
       symbol: 'WETH',
     },
