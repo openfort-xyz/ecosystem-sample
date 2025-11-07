@@ -97,6 +97,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
         sendTransaction({
           to: recipient as ViemAddress,
           value: parseEther(amount),
+          chainId,
         });
       } else {
         // Send ERC20 token
@@ -108,6 +109,7 @@ export function SendModal({ isOpen, onClose }: SendModalProps) {
         sendTransaction({
           to: selectedToken as ViemAddress,
           data: transferData as `0x${string}`,
+          chainId,
         });
       }
     } catch (err) {
