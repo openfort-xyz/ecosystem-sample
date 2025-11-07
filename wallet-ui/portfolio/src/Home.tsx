@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useConnect } from 'wagmi'
 import { ecosystemWalletInstance } from './lib/ecosystemWallet'
 
 import { Landing } from './components/Landing'
@@ -8,8 +8,9 @@ import Loading from './components/Loading'
 
 export function Home() {
   const account = useAccount()
-
-  const [isLoading, setIsLoading] = React.useState(true)
+  const { connectors, connect } = useConnect()
+  const [isAutoConnecting, setIsAutoConnecting] = React.useState(true)
+  const hasAttemptedConnect = React.useRef(false)
 
   // Initialize ecosystem wallet iframe
   React.useEffect(() => {
@@ -18,17 +19,30 @@ export function Home() {
     });
   }, []);
 
+  // Auto-connect if there's an existing session
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [])
+    if (!hasAttemptedConnect.current && !account.isConnected && connectors.length > 0) {
+      const injectedConnector = connectors.find(
+        (connector) => connector.id === 'com.rapidfire.id'
+      )
+      if (injectedConnector) {
+        hasAttemptedConnect.current = true
+        connect({ connector: injectedConnector })
+        // Give it a moment to connect, then stop loading
+        setTimeout(() => {
+          setIsAutoConnecting(false)
+        }, 500)
+      } else {
+        setIsAutoConnecting(false)
+      }
+    } else if (account.isConnected) {
+      setIsAutoConnecting(false)
+    } else if (connectors.length > 0 && hasAttemptedConnect.current) {
+      setIsAutoConnecting(false)
+    }
+  }, [account.isConnected, connectors, connect])
 
-  if (isLoading) {
-    return <Loading />
-  }
-
+  if (isAutoConnecting) return <Loading />
   if (!account.isConnected) return <Landing />
   return <Dashboard />
 }
