@@ -1,5 +1,5 @@
 import type { Address } from 'ox'
-import { ancient8Sepolia, base, baseSepolia, dosChainTestnet, kromaSepolia, polygonAmoy, sepolia } from 'viem/chains'
+import { ancient8Sepolia, base, baseSepolia, dosChainTestnet, polygonAmoy, sepolia } from 'viem/chains'
 import { ChainId } from './Wagmi'
 
 

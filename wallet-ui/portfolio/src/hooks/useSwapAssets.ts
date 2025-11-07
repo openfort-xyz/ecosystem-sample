@@ -11,7 +11,7 @@ import { useReadBalances } from './useReadBalances'
 
 /** returns assets with prices: default assets + assets from balances */
 export function useSwapAssets({ chainId }: { chainId: ChainId }) {
-  const { data: balances, refetch: refetchBalances } = useReadBalances({ chainId })
+  const { data: balances } = useReadBalances({ chainId })
 
   const { data, isLoading, isPending, refetch } = useQuery({
     queryFn: async ({ queryKey: [, chainId] }) => {

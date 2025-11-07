@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSendTransaction, useAccount, useWaitForTransactionReceipt, useEstimateGas, useGasPrice } from "wagmi";
+import { useSendTransaction, useWaitForTransactionReceipt, useGasPrice } from "wagmi";
 import { parseEther, parseUnits, Address as ViemAddress, formatEther } from "viem";
 import { Address } from "ox";
 import { Modal } from "./Modal";
@@ -14,7 +14,6 @@ interface SendModalProps {
 }
 
 export function SendModal({ isOpen, onClose }: SendModalProps) {
-  const account = useAccount();
   const chainId = useChainId();
   const chain = getChainConfig(chainId);
   const { data: assets } = useSwapAssets({ chainId });

@@ -40,9 +40,9 @@ export function Dashboard() {
 
   React.useEffect(() => {
     refetchSwapAssets();
-  }, [blockNumber]);
+  }, [blockNumber, refetchSwapAssets]);
 
-  const [selectedChains, _setSelectedChains] = React.useState(
+  const [selectedChains] = React.useState(
     config.chains.map((c) => c.id.toString())
   );
 
