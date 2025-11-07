@@ -34,7 +34,7 @@ export const defaultAssets: Record<
     },
     {
       address: '0xdC2de190a921D846B35EB92d195c9c3D9C08d1C2',
-      decimals: 18,
+      decimals: 6,
       logo: '/icons/usdc.svg',
       name: 'USD Coin',
       symbol: 'USDC',
