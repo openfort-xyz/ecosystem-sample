@@ -1,5 +1,5 @@
 import { http, createConfig } from 'wagmi'
-import { ancient8Sepolia, baseSepolia, polygonAmoy, sepolia, dosChainTestnet, base } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
