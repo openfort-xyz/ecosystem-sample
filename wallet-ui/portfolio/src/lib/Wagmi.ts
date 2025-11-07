@@ -8,6 +8,7 @@ export const config = createConfig({
   transports: {
     [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
   },
+  ssr: true, // Enable auto-reconnection to previously connected wallets
 })
 
 export type Chain = (typeof config.chains)[number]
