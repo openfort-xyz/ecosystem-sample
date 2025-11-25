@@ -1,0 +1,4 @@
+name = "ecosystem-sample-backend"
+main = "src/index.ts"
+compatibility_date = "2025-11-09"
+compatibility_flags = ["nodejs_compat"]

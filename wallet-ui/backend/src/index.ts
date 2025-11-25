@@ -2,12 +2,16 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Openfort from '@openfort/openfort-node';
+
+import { env } from "cloudflare:workers";
+import { httpServerHandler } from "cloudflare:node";
+
 import { generateJwt } from "@coinbase/cdp-sdk/auth";
 
 const app = express();
 dotenv.config();
 
-const PORT = process.env.PORT ?? 3001;
+const PORT = Number(process.env.PORT ?? 3001);
 
 if (!process.env.OPENFORT_SECRET_KEY || !process.env.SHIELD_PUBLIC_KEY || !process.env.SHIELD_SECRET_KEY || !process.env.ENCRYPTION_SHARE || !process.env.STRIPE_SECRET_KEY || !process.env.COINBASE_KEY_ID || !process.env.COINBASE_KEY_SECRET) {
     throw new Error(
@@ -213,7 +217,8 @@ app.post("/api/protected-create-encryption-session", async (req, res) => {
             encryptionShare = process.env.ENCRYPTION_SHARE!;
         }
 
-        const openfort = new Openfort.default(openfortKey);
+        // const openfort = new Openfort.default(openfortKey);
+        const openfort = new Openfort(openfortKey);
         await openfort.iam.verifyAuthToken(accessToken);
         const session = await openfort.registerRecoverySession(shieldPublicKey, shieldSecretKey, encryptionShare);
         res.json({ session });
@@ -223,10 +228,19 @@ app.post("/api/protected-create-encryption-session", async (req, res) => {
     }
 });
 
-app.get("/api/healthz", (req, res) => {
-    res.send("OK");
+// app.get("/api/healthz", (req, res) => {
+//     res.send("OK");
+// });
+
+// app.listen(PORT, () => {
+//     console.log(`Server is running at port ${PORT}`);
+// });
+
+
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "ecosystem-sample-backend running on Cloudflare Workers!" });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running at port ${PORT}`);
-});
+app.listen(PORT);
+export default httpServerHandler({ port: PORT });

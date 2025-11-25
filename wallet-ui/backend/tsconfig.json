@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "moduleResolution": "NodeNext",
-        "module": "NodeNext",
+        "moduleResolution": "bundler",
+        "module": "esnext",
         "lib": [
-            "ES2020",
+            "ES2022",
             "DOM"
         ],
         "outDir": "./dist",
@@ -15,11 +15,10 @@
         "noEmitOnError": false,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "isolatedModules": true
+        "isolatedModules": true,
+        "types": ["./worker-configuration.d.ts"],
     },
-    "include": [
-        "src/**/*"
-    ],
+    "include": ["worker-configuration.d.ts", "src/**/*.ts"],
     "exclude": [
         "node_modules",
         "dist",
