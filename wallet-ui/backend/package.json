@@ -7,7 +7,7 @@
         "clean": "shx rm -rf dist",
         "dev": "wrangler dev",
         "types": "wrangler types",
-        "build": "wrangler types && tsc --noEmit",
+        "build": "tsc --noEmit",
         "deploy": "wrangler deploy",
         "start": "wrangler dev"
     },
