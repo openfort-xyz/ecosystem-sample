@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import Openfort from '@openfort/openfort-node';
 
 import { env } from "cloudflare:workers";
@@ -9,17 +8,16 @@ import { httpServerHandler } from "cloudflare:node";
 import { generateJwt } from "@coinbase/cdp-sdk/auth";
 
 const app = express();
-dotenv.config();
 
-const PORT = Number(process.env.PORT ?? 3001);
+const PORT = Number(env.PORT ?? 3001);
 
-if (!process.env.OPENFORT_SECRET_KEY || !process.env.SHIELD_PUBLIC_KEY || !process.env.SHIELD_SECRET_KEY || !process.env.ENCRYPTION_SHARE || !process.env.STRIPE_SECRET_KEY || !process.env.COINBASE_KEY_ID || !process.env.COINBASE_KEY_SECRET) {
+if (!env.OPENFORT_SECRET_KEY || !env.SHIELD_PUBLIC_KEY || !env.SHIELD_SECRET_KEY || !env.ENCRYPTION_SHARE || !env.STRIPE_SECRET_KEY || !env.COINBASE_KEY_ID || !env.COINBASE_KEY_SECRET) {
     throw new Error(
         `Unable to load the .env file. Please copy .env.example to .env and fill in the required environment variables.`
     );
 }
 
-if (!process.env.OPENFORT_PROD_SECRET_KEY || !process.env.SHIELD_PROD_PUBLIC_KEY || !process.env.SHIELD_PROD_SECRET_KEY || !process.env.ENCRYPTION_PROD_SHARE) {
+if (!env.OPENFORT_PROD_SECRET_KEY || !env.SHIELD_PROD_PUBLIC_KEY || !env.SHIELD_PROD_SECRET_KEY || !env.ENCRYPTION_PROD_SHARE) {
     console.warn(
         `Unable to load the .env file for production. Please copy .env.example to .env and fill in the required environment variables for production.`
     );
@@ -66,7 +64,7 @@ app.get("/api/onramp-providers", async (req, res) => {
         const stripeResponse = await fetch("https://api.stripe.com/v1/crypto/onramp/quotes", {
             method: "GET",
             headers: {
-                "Authorization": `Bearer ${process.env.STRIPE_SECRET_KEY}`
+                "Authorization": `Bearer ${env.STRIPE_SECRET_KEY}`
             },
         });
         if (stripeResponse.ok) {
@@ -118,7 +116,7 @@ app.post("/api/create-onramp-session", async (req, res) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": `Bearer ${process.env.STRIPE_SECRET_KEY}`
+                    "Authorization": `Bearer ${env.STRIPE_SECRET_KEY}`
                 },
                 body: params
             });
@@ -137,8 +135,8 @@ app.post("/api/create-onramp-session", async (req, res) => {
 
         if (provider === 'coinbase') {
             const jwt = await generateJwt({
-                apiKeyId: process.env.COINBASE_KEY_ID!,
-                apiKeySecret: process.env.COINBASE_KEY_SECRET!,
+                apiKeyId: env.COINBASE_KEY_ID!,
+                apiKeySecret: env.COINBASE_KEY_SECRET!,
                 requestMethod: "POST",
                 requestHost: "api.developer.coinbase.com",
                 requestPath: "/onramp/v1/buy/quote"
@@ -200,21 +198,21 @@ app.post("/api/protected-create-encryption-session", async (req, res) => {
         let openfortKey, shieldPublicKey, shieldSecretKey, encryptionShare;
 
         if (isProd) {
-            if (!process.env.OPENFORT_PROD_SECRET_KEY || !process.env.SHIELD_PROD_PUBLIC_KEY ||
-                !process.env.SHIELD_PROD_SECRET_KEY || !process.env.ENCRYPTION_PROD_SHARE) {
+            if (!env.OPENFORT_PROD_SECRET_KEY || !env.SHIELD_PROD_PUBLIC_KEY ||
+                !env.SHIELD_PROD_SECRET_KEY || !env.ENCRYPTION_PROD_SHARE) {
                 return res.status(500).send({
                     error: 'Production environment variables are not configured properly.',
                 });
             }
-            openfortKey = process.env.OPENFORT_PROD_SECRET_KEY;
-            shieldPublicKey = process.env.SHIELD_PROD_PUBLIC_KEY;
-            shieldSecretKey = process.env.SHIELD_PROD_SECRET_KEY;
-            encryptionShare = process.env.ENCRYPTION_PROD_SHARE;
+            openfortKey = env.OPENFORT_PROD_SECRET_KEY;
+            shieldPublicKey = env.SHIELD_PROD_PUBLIC_KEY;
+            shieldSecretKey = env.SHIELD_PROD_SECRET_KEY;
+            encryptionShare = env.ENCRYPTION_PROD_SHARE;
         } else {
-            openfortKey = process.env.OPENFORT_SECRET_KEY!;
-            shieldPublicKey = process.env.SHIELD_PUBLIC_KEY!;
-            shieldSecretKey = process.env.SHIELD_SECRET_KEY!;
-            encryptionShare = process.env.ENCRYPTION_SHARE!;
+            openfortKey = env.OPENFORT_SECRET_KEY!;
+            shieldPublicKey = env.SHIELD_PUBLIC_KEY!;
+            shieldSecretKey = env.SHIELD_SECRET_KEY!;
+            encryptionShare = env.ENCRYPTION_SHARE!;
         }
 
         // const openfort = new Openfort.default(openfortKey);

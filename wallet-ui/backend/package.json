@@ -34,10 +34,9 @@
     "dependencies": {
         "@types/ws": "^8.18.1",
         "cors": "^2.8.5",
-        "dotenv": "^16.4.5",
         "path": "^0.12.7",
-        "ws": "^8.18.3",
-        "wrangler": "^4.50.0"
+        "wrangler": "^4.50.0",
+        "ws": "^8.18.3"
     },
     "packageManager": "pnpm@10.23.0"
 }
