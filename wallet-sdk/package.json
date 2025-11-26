@@ -1,6 +1,6 @@
 {
   "name": "@rapidfire/id",
-  "version": "0.0.125",
+  "version": "0.0.126",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
-  "author": "Openfort (https://www.openfort.io)", 
+  "author": "Openfort (https://www.openfort.io)",
   "homepage": "https://github.com/openfort-xyz/openfort-sample/wallet-sdk/README.md",
   "repository": "github.com/openfort-xyz/ecosystem-sample.git",
   "devDependencies": {
