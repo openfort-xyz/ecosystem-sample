@@ -1,4 +1,4 @@
 packages:
   - 'wallet-sdk'
-  # - 'wallet-ui/backend'
+  - 'wallet-ui/backend'
   # - 'wallet-ui/frontend'

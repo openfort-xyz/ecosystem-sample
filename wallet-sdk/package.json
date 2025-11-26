@@ -19,7 +19,7 @@
   "keywords": [],
   "author": "Openfort (https://www.openfort.io)", 
   "homepage": "https://github.com/openfort-xyz/openfort-sample/wallet-sdk/README.md",
-  "repository": "github.com/openfort-xyz/ecosystem-sample.git",
+  "repository": "https://github.com/openfort-xyz/ecosystem-sample",
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
