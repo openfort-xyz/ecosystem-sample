@@ -1,0 +1,50 @@
+name: Run pnpm build
+on:
+    pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pnpm-build:
+    name: pnpm build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Security audit
+        run: pnpm audit
+
+      # - name: turbo lint
+      #   run: pnpm lint
+
+      # - name: turbo check
+      #   run: pnpm check
+
+      # - name: turbo test
+      #   run: pnpm test
+
+      # - name: Code check (Biome)
+      #   run: pnpm biome check
+
+      - name: Build project
+        run: pnpm build
