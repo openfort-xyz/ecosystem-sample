@@ -21,7 +21,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cf-build": "yarn install && react-app-rewired build "
   },
   "eslintConfig": {
     "extends": [

@@ -12,11 +12,6 @@
         "deploy": "wrangler deploy",
         "start": "wrangler dev"
     },
-    "pnpm": {
-        "overrides": {
-            "iconv-lite": "0.7.0"
-        }
-    },
     "keywords": [],
     "author": "openfort",
     "license": "ISC",
@@ -41,6 +36,6 @@
     },
     "packageManager": "pnpm@10.23.0",
     "engines": {
-        "node": ">=22.21.1"
+        "node": ">=22.16.0"
     }
 }
