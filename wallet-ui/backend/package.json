@@ -3,6 +3,7 @@
     "version": "0.0.125",
     "main": "index.js",
     "type": "module",
+    "private": true,
     "scripts": {
         "clean": "shx rm -rf dist",
         "dev": "wrangler dev",

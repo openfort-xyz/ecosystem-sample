@@ -2,3 +2,14 @@ name = "ecosystem-sample-backend"
 main = "src/index.ts"
 compatibility_date = "2025-11-09"
 compatibility_flags = ["nodejs_compat"]
+
+preview_urls= false
+workers_dev= false
+
+[observability]
+enabled = false
+
+[[routes]]
+pattern= "id-back.sample.openfort.io"
+zone_name= "openfort.io"
+custom_domain= true

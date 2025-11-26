@@ -1,0 +1,17 @@
+{
+    "name": "ecosystem-sample",
+    "private": true,
+    "workspaces": [
+        "wallet-sdk"
+    ],
+    "scripts": {
+        "build": "pnpm --filter @rapidfire/id build",
+        "changeset": "changeset",
+        "changeset:version": "pnpm install --lockfile-only && changeset version",
+        "changeset:publish": "pnpm build && changeset publish"
+    },
+    "devDependencies": {
+        "@changesets/changelog-github": "^0.5.1",
+        "@changesets/cli": "^2.29.7"
+    }
+}

@@ -17,10 +17,14 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
-  "author": "Openfort (https://www.openfort.io)",
+  "author": "Openfort (https://www.openfort.io)", 
+  "homepage": "https://github.com/openfort-xyz/openfort-sample/wallet-sdk/README.md",
+  "repository": "github.com/openfort-xyz/ecosystem-sample.git",
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/cli": "^2.29.7",
     "@types/node": "^20.4.5",
-    "tsup": "^7.1.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.6.2"
   },
   "dependencies": {
@@ -30,5 +34,11 @@
     "dist",
     "README.md"
   ],
-  "packageManager": "yarn@1.22.17"
+  "packageManager": "pnpm@10.23.0",
+  "engines": {
+    "node": ">=24.11.1"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
 }
