@@ -31,7 +31,7 @@
         "@types/ws": "^8.18.1",
         "cors": "^2.8.5",
         "path": "^0.12.7",
-        "wrangler": "^4.50.0",
+        "wrangler": "^4.59.1",
         "ws": "^8.18.3"
     },
     "packageManager": "pnpm@10.23.0",
